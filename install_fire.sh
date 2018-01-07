@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.2
+#version 0.0.1.3
 #Janurary 6, 2018
 #Randy Hoggard
 
@@ -25,7 +25,7 @@ forceScan="false" #if set to true node will be configured to rescan blockchain
 forceValidate="false" #if set to true node will be configured to revalidate transactions on the blockchain
 useSnapshot="false" #if set to true, a snapshot of the blockchain will be downloaded from heatbrowser.com
 snapshotURL="https://heatledger.net/snapshots/blockchain.zip" #the location to download snapshots from, defaults to heatledger.net daily backup
-installDir="/home/heatUser" #the location to install fire in, defaults to users home directory
+installDir="/home/$heatUser" #the location to install fire in, defaults to users home directory
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # WARNING: DO NOT CHANGE ANYTHING BELOW UNLESS YOU KNOW WHAT YOU ARE DOING!!!!
@@ -36,14 +36,14 @@ installDir="/home/heatUser" #the location to install fire in, defaults to users 
 
 
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$walletSecret;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
+optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=\"$walletSecret\";heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 #cd $installDir
 #download fire here
 #unzip fire here
 #for testing, we will just copy ove the fire folder
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.2.tar.gz"
-tar -xzvf fire_0.0.2.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.3.tar.gz"
+tar -xzvf fire_0.0.1.3.tar.gz
 cd fire
-/bin/bash fire --install --installOptions=$optionsString
+/bin/bash fire --install --installOptions="$optionsString"
 
