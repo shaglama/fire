@@ -12,16 +12,17 @@ To install Fire, download the install script install_fire.sh :
 
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire.sh
 
-
+********************************************************************************
 Set the execute permissions:
 
 chmod +x install_fire.sh
 
-
+*******************************************************************************
 Edit the installer script and change the options to your liking:
+
 nano install_fire.sh
 
-
+**********************************************************************************
 At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
 
 heatUser- the user that will run the node. It defaults to the user running the installer. It can be set to an existing user or it will create a new user if you pass it a name that doesn't exist on the system.If creating a new user, be sure to set password
@@ -50,7 +51,7 @@ snapshotURL- the location to download snapshots from, defaults to heatledger.net
 installDir- the location to install fire in, defaults to users home directory
 
 
-
+*******************************************************************************************
 
 After install, move to the fire directory. From there, you can issue commands to fire like so:
 
@@ -76,7 +77,7 @@ this will connect to the Heat Ledger nodes log file and follow the output. To ex
 this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y.
 
 
-
+**************************************************************************************************
 
 Some others that are almost finished include:
 ./fire --start
@@ -97,7 +98,7 @@ reinstall fire, or heat, or both
 ./fire --refresh 
 delete the old copy of blockchain, download a new one if desired, and restart the node
 
-
+*****************************************************************************************8
 
 Many more features planned soon so check back often. 
 
