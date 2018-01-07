@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.25
+#version 0.0.1.26
 #Janurary 7, 2018
 #Randy Hoggard
 
@@ -62,9 +62,10 @@ echo $encoded
 optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$encoded;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 if [[ ! -d $installDir ]]; then
 	mkdir $installDir
+fi
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.25.tar.gz"
-tar -xzvf fire_0.0.1.25.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.26.tar.gz"
+tar -xzvf fire_0.0.1.26.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
