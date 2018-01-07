@@ -80,6 +80,7 @@ this will open the screen session the node is running in to view its output. To 
 **************************************************************************************************
 
 Some others that are almost finished include:
+
 ./fire --start
 this will start Fire if it is not already running. Fire is configured to start at boot and so you generally don't need to use this unless you manually stop fire
 
