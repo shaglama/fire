@@ -12,12 +12,15 @@ To install Fire, download the install script install_fire.sh :
 
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire.sh
 
+
 Set the execute permissions:
 
 chmod +x install_fire.sh
 
+
 Edit the installer script and change the options to your liking:
 nano install_fire.sh
+
 
 At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
 
@@ -48,9 +51,11 @@ installDir- the location to install fire in, defaults to users home directory
 
 
 
+
 After install, move to the fire directory. From there, you can issue commands to fire like so:
 
 ./fire --commandName
+
 
 A list of currently working (at least partially) commands include:
 
@@ -69,6 +74,7 @@ this will connect to the Heat Ledger nodes log file and follow the output. To ex
 
 ./fire --attachToNode
 this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y.
+
 
 
 
@@ -92,10 +98,15 @@ reinstall fire, or heat, or both
 delete the old copy of blockchain, download a new one if desired, and restart the node
 
 
+
 Many more features planned soon so check back often. 
+
 Donations appreciated:
 
 HEAT: 18204334369979641558
+
 BTC: 15D9TLNu6FFoLiTJGbdMBpT6TETMsPc2xT
+
 LTC: LfXgenZQC81sQ1kc3G5JwGCdBb8DLVY6LU
+
 DOGE: DE52xxNkGYGxGpFQzy96VKcAki4bC9PKoi
