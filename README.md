@@ -98,7 +98,7 @@ reinstall fire, or heat, or both
 ./fire --refresh 
 delete the old copy of blockchain, download a new one if desired, and restart the node
 
-*****************************************************************************************8
+**************************************************************************************************
 
 Many more features planned soon so check back often. 
 
