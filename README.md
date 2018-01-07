@@ -61,19 +61,24 @@ After install, move to the fire directory. From there, you can issue commands to
 A list of currently working (at least partially) commands include:
 
 ./fire --uninstall
+
 this will remove Fire from your system
 
 
 ./fire --viewFireStatus
+
 this will show the last status update from fire. Fire updates this status once per minute, so no need to check more often
 
 ./fire --viewFireLogs
+
 this will show the status of both the fire_builder and fire_watch services used to run the node
 
 ./fire --viewNodeLogs
+
 this will connect to the Heat Ledger nodes log file and follow the output. To exit hold Ctrl and press c
 
 ./fire --attachToNode
+
 this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y.
 
 
@@ -82,22 +87,29 @@ this will open the screen session the node is running in to view its output. To 
 Some others that are almost finished include:
 
 ./fire --start
+
 this will start Fire if it is not already running. Fire is configured to start at boot and so you generally don't need to use this unless you manually stop fire
 
 ./fire --stop
+
 this will stop Fire and kill the node. You will have to manually restart after this unless you reboot
 
 ./fire --restart
+
 this will stop the node and then start it back up again
 
 ./fire --info
+
 get info about the nodes status including details about the state of the blockchain and forging status
 
 ./fire --reinstall --reinstallOptions="options go here"
+
 reinstall fire, or heat, or both
 
 ./fire --refresh 
+
 delete the old copy of blockchain, download a new one if desired, and restart the node
+
 
 **************************************************************************************************
 
