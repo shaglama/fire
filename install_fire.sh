@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.9
+#version 0.0.1.10
 #Janurary 6, 2018
 #Randy Hoggard
 
@@ -60,8 +60,8 @@ optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$i
 #unzip fire here
 #for testing, we will just copy ove the fire folder
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.9.tar.gz"
-tar -xzvf fire_0.0.1.9.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.10.tar.gz"
+tar -xzvf fire_0.0.1.10.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
