@@ -2,6 +2,8 @@
 Heat Ledger server installer and monitor for Ubuntu
 
 
-This project is not ready yet!!! Files here are only for devs test purpose!!! They PROBABLY WILL NOT WORK ON YOUR BOX!!!!! You have been warned. 
+Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 but may work on newer versions. It will probably not work on older versions as it relies on systemd.
 
-Check back soon for an alpha version
+To install Fire, download the install script install_fire.sh :
+
+wget https://
