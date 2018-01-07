@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.20
+#version 0.0.1.21
 #Janurary 7, 2018
 #Randy Hoggard
 
@@ -56,8 +56,8 @@ encoded=`urlencode "$walletSecret"`
 echo $encoded
 optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$encoded;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.20.tar.gz"
-tar -xzvf fire_0.0.1.20.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.21.tar.gz"
+tar -xzvf fire_0.0.1.21.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
