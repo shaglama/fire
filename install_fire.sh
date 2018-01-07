@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.13
+#version 0.0.1.14
 #Janurary 6, 2018
 #Randy Hoggard
 
@@ -13,8 +13,8 @@
 #	PLEASE SET THE FOLLOWING VALUES TO YOUR OPTIONS BEFORE RUNNING THIS
 #	SCRIPT!
  
-heatUser=$USER #user to run the node with, defaults to user that runs the script. to set a different user change here or pass in as argument, if user does not exist it will be created
-password= #password for creating a new user, if new user is created without changing the password here or passing in as argument you will need to set the password yourself after running this script
+heatUser="$USER" #user to run the node with, defaults to user that runs the script. to set a different user change here or pass in as argument, if user does not exist it will be created
+password="" #password for creating a new user, if new user is created without changing the password here or passing in as argument you will need to set the password yourself after running this script
 apiKey="changeMePlease" #Default api key, please change or pass in as argument
 ipAddress="" #public ip address or host, set here or pass as argument. if no value is set, the script will attempt to obtain it from a public provider (dynDNS)
 walletSecret="" #the secret passphrase for the wallet running the node, set here or pass as argument
@@ -23,8 +23,8 @@ maxPeers=500 #number of peers node should connect to,set here or pass as argumen
 hallmark="" #the node hallmark, increases forging profits, set here or pass in as argument, if not set script will attempt to create a new hallmark for the node
 forceScan="false" #if set to true node will be configured to rescan blockchain
 forceValidate="false" #if set to true node will be configured to revalidate transactions on the blockchain
-useSnapshot="false" #if set to true, a snapshot of the blockchain will be downloaded from heatbrowser.com
-snapshotURL="https://heatledger.net/snapshots/blockchain.zip" #the location to download snapshots from, defaults to heatledger.net daily backup
+useSnapshot="true" #if set to true, a snapshot of the blockchain will be downloaded from heatbrowser.com
+snapshotURL="http://heatledger.net/snapshots/blockchain.zip" #the location to download snapshots from, defaults to heatledger.net daily backup
 installDir="/home/$heatUser" #the location to install fire in, defaults to users home directory
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -56,8 +56,8 @@ encoded=`urlencode "$walletSecret"`
 echo $encoded
 optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$encoded;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.13.tar.gz"
-tar -xzvf fire_0.0.1.13.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.14.tar.gz"
+tar -xzvf fire_0.0.1.14.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
