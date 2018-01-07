@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.4
+#version 0.0.1.5
 #Janurary 6, 2018
 #Randy Hoggard
 
@@ -31,19 +31,37 @@ installDir="/home/$heatUser" #the location to install fire in, defaults to users
 # WARNING: DO NOT CHANGE ANYTHING BELOW UNLESS YOU KNOW WHAT YOU ARE DOING!!!!
 
 
-
+#********  Functions *********************************************************
+urlencode() {
+    # urlencode <string>
+    old_lc_collate=$LC_COLLATE
+    LC_COLLATE=C
+    
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            *) printf '%%%02X' "'$c" ;;
+        esac
+    done
+    
+    LC_COLLATE=$old_lc_collate
+}
 
 
 
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=\"$walletSecret\";heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
+encoded=`urlencode $walletSecret`
+echo $encoded
+optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$encoded;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 #cd $installDir
 #download fire here
 #unzip fire here
 #for testing, we will just copy ove the fire folder
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.4.tar.gz"
-tar -xzvf fire_0.0.1.4.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.5.tar.gz"
+tar -xzvf fire_0.0.1.5.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
