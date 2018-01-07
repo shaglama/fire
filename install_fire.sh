@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.1.5
+#version 0.0.1.6
 #Janurary 6, 2018
 #Randy Hoggard
 
@@ -52,7 +52,7 @@ urlencode() {
 
 
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-encoded=`urlencode $walletSecret`
+encoded=`urlencode "$walletSecret"`
 echo $encoded
 optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$ipAddress;walletSecret=$encoded;heatId=$heatId;maxPeers=$maxPeers;hallmark=$hallmark;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotURL=$snapshotURL"
 #cd $installDir
@@ -60,8 +60,8 @@ optionsString="heatUser=$heatUser;password=$password;apiKey=$apiKey;ipAddress=$i
 #unzip fire here
 #for testing, we will just copy ove the fire folder
 cd $installDir/
-wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.5.tar.gz"
-tar -xzvf fire_0.0.1.5.tar.gz
+wget "https://github.com/shaglama/fire/raw/development/fire_0.0.1.6.tar.gz"
+tar -xzvf fire_0.0.1.6.tar.gz
 cd fire
 /bin/bash fire --install --installOptions="$optionsString"
 
