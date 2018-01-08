@@ -22,6 +22,11 @@ Edit the installer script and change the options to your liking:
 
 nano install_fire_0.0.2.8.sh
 
+********************************************************************************
+Run the installer script
+
+./install_fire_0.0.2.8.sh
+
 **********************************************************************************
 At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
 
