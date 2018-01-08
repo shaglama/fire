@@ -1,26 +1,26 @@
-# fire 0.0.1.23
-January 7, 2018
+# fire 0.0.2.8
+January 8, 2018
 Randy Hoggard
 shaglama@gmail.com
 
 Heat Ledger server installer and monitor for Ubuntu
 
 
-Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 but may work on newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. Forging is set for next release but as of this time it does not automatically initiate forging and does not provide a method to do it manually either. 
+Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 or newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. However, it now performs its core tasks well. It currently will download the newest version of Heat Ledger, install  it, set up a service to monitor it, and initiate forging after the node has synced. It automatically enables the node to come up after reboots as well. It also provides basic information about the state of the node.
 
 To install Fire, download the install script install_fire.sh :
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.2.8.sh
 
 ********************************************************************************
 Set the execute permissions:
 
-chmod +x install_fire.sh
+chmod +x install_fire_0.0.2.8.sh
 
 *******************************************************************************
 Edit the installer script and change the options to your liking:
 
-nano install_fire.sh
+nano install_fire_0.0.2.8.sh
 
 **********************************************************************************
 At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
@@ -60,10 +60,12 @@ After install, move to the fire directory. From there, you can issue commands to
 
 A list of currently working (at least partially) commands include:
 
+./fire --info
+this show the state of the blockchain and whether the node is synced. Also shows forging status.
+
 ./fire --uninstall
 
 this will remove Fire from your system
-
 
 ./fire --viewFireStatus
 
