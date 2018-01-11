@@ -29,7 +29,7 @@ heatUser="$USER"
 							# user to run the node with, defaults to user that runs	#
 							# the script. to set a different user change here or 		#
 							# pass in as argument, if user does not exist it will		#
-							connect sword cruel nose broken sneak taint explode bliss shade bright moral# be created															#
+							# be created															#
 																										#
 password="" 			
 							# password for creating a new user, if new user is 		#
