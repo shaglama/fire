@@ -1,5 +1,5 @@
-# fire 0.0.2.8
-January 8, 2018
+# fire 0.0.2.14
+January 12, 2018
 Randy Hoggard
 shaglama@gmail.com
 
@@ -10,22 +10,22 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 
 To install Fire, download the install script install_fire.sh :
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.2.8.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.2.14.sh
 
 ********************************************************************************
 Set the execute permissions:
 
-chmod +x install_fire_0.0.2.8.sh
+chmod +x install_fire_0.0.2.14.sh
 
 *******************************************************************************
 Edit the installer script and change the options to your liking:
 
-nano install_fire_0.0.2.8.sh
+nano install_fire_0.0.2.14.sh
 
 ********************************************************************************
 Run the installer script
 
-./install_fire_0.0.2.8.sh
+./install_fire_0.0.2.14.sh
 
 **********************************************************************************
 At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
