@@ -1,3 +1,4 @@
 *.tar.gz export-ignore
 install_fire_0.0.3.8.sh export-ignore 
 README.md export-ignore
+*.sh.sh export-ignore 
