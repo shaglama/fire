@@ -16,59 +16,59 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 
 ** Cli install script now supports passing install options via argument --options=
 
-#####     Installation With text mode GUI     #################################
+##     Installation With text mode GUI     ###################################
 
-## Step 1
+### Step 1
 Download the GUI install script:
 
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8_gui.sh
 
-## Step 2
+### Step 2
 Set the execute permission:
 
 chmod +x install_fire_0.0.3.8_gui.sh
 
-## Step 3
+### Step 3
 Run the installer
 
 ./install_fire_0.0.3.8_gui.sh
 
-#####     Installation With Cli Script     ######################################
-## Step 1
+##     Installation With Cli Script     ######################################
+### Step 1
 Download the install script:
 
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8.sh
 
-## Step 2
+### Step 2
 Set the execute permissions:
 
 chmod +x install_fire_0.0.3.8.sh
 
-## Step 3
+### Step 3
 Choose whether you would like set the options by editing the script or set the options by passing arguments to the command
 If you choose to edit the script, proceed to step 3a. If you would rather pass the options as arguments, proceed to step 4b.
 
-## Step 3a
+#### Step 3a
 Edit the installer script and change the options to your liking (Available options described later in this document):
 
 nano install_fire_0.0.3.8.sh
 
-## Step 4
+### Step 4
 If you set the options by editing the script in step 3, proceed to step 4a. If you decided to pass the options as arguments in step 3, proceed to step 4b
 
-## Step 4a
+#### Step 4a
 Run the installer script
 
 ./install_fire_0.0.3.8.sh
 
-## Step 4b
+#### Step 4b
 Pass the options as argument to the installer and run installer script
 
 ./install_fire_0.0.3.8.sh --options="opition1Name=option1Val;option2Name=option2Val"
 
 Note:  see 'options' option below
 
-#####     Options     ############################################################
+##     Options     ############################################################
 At a minimum, you must provide 'walletSecret' and 'heatId' .When editing values in the script file, be sure to enclose your values in double quotes: "val"
 
 options- a ';' delimited string composed of the rest of the available options. The string should be in the form of:
@@ -100,7 +100,7 @@ snapshotURL- the location to download snapshots from, defaults to heatledger.net
 installDir- the location to install fire in, defaults to users home directory
 
 
-#####     Usage     ###########################################################################
+##     Usage     ###########################################################################
 
 After install, move to the fire directory. From there, you can issue commands to fire like so:
 
