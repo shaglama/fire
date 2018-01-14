@@ -14,42 +14,61 @@ Cli install script now supports option 'optionString'
 Cli install script now supports passing install options via argument --options=
 
 #####     Installation With text mode GUI     #################################
-
+## Step 1
 Download the GUI install script:
 
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8_gui.sh
 
+## Step 2
 Set the execute permission:
 
 chmod +x install_fire_0.0.3.8_gui.sh
 
+## Step 3
 Run the installer
 
 ./install_fire_0.0.3.8_gui.sh
 
-#####     Installation With Cli Script #######################################
-
+#####     Installation With Cli Script ###########################################
+## Step 1
 Download the install script:
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.2.14.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8.sh
 
-********************************************************************************
+## Step 2
 Set the execute permissions:
 
-chmod +x install_fire_0.0.2.14.sh
+chmod +x install_fire_0.0.3.8.sh
 
-*******************************************************************************
-Edit the installer script and change the options to your liking:
+## Step 3
+Choose whether you would like set the options by editing the script or set the options by passing arguments to the command
+If you choose to edit the script, proceed to step 3a. If you would rather pass the options as arguments, proceed to step 4b.
 
-nano install_fire_0.0.2.14.sh
+## Step 3a
+Edit the installer script and change the options to your liking (Available options described later in this document):
 
-********************************************************************************
+nano install_fire_0.0.3.8.sh
+
+## Step 4
+If you set the options by editing the script in step 3, proceed to step 4a. If you decided to pass the options as arguments in step 3, proceed to step 4b
+
+## Step 4a
 Run the installer script
 
-./install_fire_0.0.2.14.sh
+./install_fire_0.0.3.8.sh
+
+## Step 4b
+Pass the options as argument to the installer and run installer script
+
+./install_fire_0.0.3.8.sh --options="opition1Name=option1Val;option2Name=option2Val"
+
+Note:  see 'options' option below
 
 **********************************************************************************
-At a minimum, you must provide 'walletSecret' and 'heatId' . Be sure to enclose your values in double quotes: "val"
+At a minimum, you must provide 'walletSecret' and 'heatId' .When editing values in the script file, be sure to enclose your values in double quotes: "val"
+
+options- a ';' delimited string composed of the rest of the available options. The string should be in the form of:
+  "option1=value;option2=value;option3=value"
 
 heatUser- the user that will run the node. It defaults to the user running the installer. It can be set to an existing user or it will create a new user if you pass it a name that doesn't exist on the system.If creating a new user, be sure to set password
 
