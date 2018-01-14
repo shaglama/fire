@@ -8,12 +8,16 @@ Heat Ledger server installer and monitor for Ubuntu
 
 Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 or newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. However, it now performs its core tasks well. It currently will download the newest version of Heat Ledger, install  it, set up a service to monitor it, and initiate forging after the node has synced. It automatically enables the node to come up after reboots as well. It also provides basic information about the state of the node.
 
-Whats new:
-Fire now has a text mode GUI for the installer
-Cli install script now supports option 'optionString'
-Cli install script now supports passing install options via argument --options=
+#####     Whats new     ######################################################
+
+** Fire now has a text mode GUI for the installer
+
+** Cli install script now supports option 'optionString'
+
+** Cli install script now supports passing install options via argument --options=
 
 #####     Installation With text mode GUI     #################################
+
 ## Step 1
 Download the GUI install script:
 
@@ -29,7 +33,7 @@ Run the installer
 
 ./install_fire_0.0.3.8_gui.sh
 
-#####     Installation With Cli Script ###########################################
+#####     Installation With Cli Script     ######################################
 ## Step 1
 Download the install script:
 
@@ -64,7 +68,7 @@ Pass the options as argument to the installer and run installer script
 
 Note:  see 'options' option below
 
-**********************************************************************************
+#####     Options     ############################################################
 At a minimum, you must provide 'walletSecret' and 'heatId' .When editing values in the script file, be sure to enclose your values in double quotes: "val"
 
 options- a ';' delimited string composed of the rest of the available options. The string should be in the form of:
@@ -96,7 +100,7 @@ snapshotURL- the location to download snapshots from, defaults to heatledger.net
 installDir- the location to install fire in, defaults to users home directory
 
 
-*******************************************************************************************
+#####     Usage     ###########################################################################
 
 After install, move to the fire directory. From there, you can issue commands to fire like so:
 
