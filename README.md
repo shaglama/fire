@@ -164,7 +164,22 @@ delete the old copy of blockchain, download a new one if desired, and restart th
 
 **************************************************************************************************
 
-Many more features planned soon so check back often. 
+## Coming Soon
+
+Some of the features planned for upcoming releases include:
+
+Encryption of sensitive settings
+
+Option to load installer options from config file (this will make it very easy to mass install)
+
+Auto upgrade 
+
+And many more!!!! Check back soon to see the progress.
+
+
+
+## Get Involved
+If you have any questions about the script or problems running it or would like to help with the development of this script please contact shaglama@gmail.com
 
 Donations appreciated:
 
