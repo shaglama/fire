@@ -1,5 +1,5 @@
-# fire 0.0.3.8
-January 14, 2018
+# fire 0.0.3.11
+January 15, 2018
 Randy Hoggard
 shaglama@gmail.com
 
@@ -16,33 +16,37 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 
 ** Cli install script now supports passing install options via argument --options=
 
+** Upgrade funcatioality implmented. Now includes option for auto upgrading
+
+** Finished stop and start functions
+
 ##     Installation With text mode GUI     ###################################
 
 ### Step 1
 Download the GUI install script:
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8_gui.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.11_gui.sh
 
 ### Step 2
 Set the execute permission:
 
-chmod +x install_fire_0.0.3.8_gui.sh
+chmod +x install_fire_0.0.3.11_gui.sh
 
 ### Step 3
 Run the installer
 
-./install_fire_0.0.3.8_gui.sh
+./install_fire_0.0.3.11_gui.sh
 
 ##     Installation With Cli Script     ######################################
 ### Step 1
 Download the install script:
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.8.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.11.sh
 
 ### Step 2
 Set the execute permissions:
 
-chmod +x install_fire_0.0.3.8.sh
+chmod +x install_fire_0.0.3.11.sh
 
 ### Step 3
 Choose whether you would like set the options by editing the script or set the options by passing arguments to the command
@@ -51,7 +55,7 @@ If you choose to edit the script, proceed to step 3a. If you would rather pass t
 #### Step 3a
 Edit the installer script and change the options to your liking (Available options described later in this document):
 
-nano install_fire_0.0.3.8.sh
+nano install_fire_0.0.3.11.sh
 
 ### Step 4
 If you set the options by editing the script in step 3, proceed to step 4a. If you decided to pass the options as arguments in step 3, proceed to step 4b
@@ -59,12 +63,12 @@ If you set the options by editing the script in step 3, proceed to step 4a. If y
 #### Step 4a
 Run the installer script
 
-./install_fire_0.0.3.8.sh
+./install_fire_0.0.3.11.sh
 
 #### Step 4b
 Pass the options as argument to the installer and run installer script
 
-./install_fire_0.0.3.8.sh --options="opition1Name=option1Val;option2Name=option2Val"
+./install_fire_0.0.3.11.sh --options="opition1Name=option1Val;option2Name=option2Val"
 
 Note:  see 'options' option below
 
@@ -99,6 +103,8 @@ snapshotURL- the location to download snapshots from, defaults to heatledger.net
 
 installDir- the location to install fire in, defaults to users home directory
 
+autoUpgrade- enable automatic upgrading
+
 
 ##     Usage     ###########################################################################
 
@@ -132,18 +138,18 @@ this will connect to the Heat Ledger nodes log file and follow the output. To ex
 
 this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y.
 
+./fire --start
+this will start Fire and the Heat Ledger node if it is not already running. Fire is configured to start at boot so you generally don't need to use this unless you manually stop the node
+
+./fire --stop
+this will stop Fire and the Heat Ledger  node if it is running
+
+./fire --upgrade
+this will check for a new version of Heat Ledger and install it if found
 
 **************************************************************************************************
 
 Some others that are almost finished include:
-
-./fire --start
-
-this will start Fire if it is not already running. Fire is configured to start at boot and so you generally don't need to use this unless you manually stop fire
-
-./fire --stop
-
-this will stop Fire and kill the node. You will have to manually restart after this unless you reboot
 
 ./fire --restart
 
@@ -171,8 +177,6 @@ Some of the features planned for upcoming releases include:
 Encryption of sensitive settings
 
 Option to load installer options from config file (this will make it very easy to mass install)
-
-Auto upgrade 
 
 And many more!!!! Check back soon to see the progress.
 
