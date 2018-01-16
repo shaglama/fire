@@ -25,7 +25,9 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 ### Step 1
 Download the GUI install script:
 
+
 wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.11_gui.sh
+
 
 ### Step 2
 Set the execute permission:
