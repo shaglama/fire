@@ -157,10 +157,6 @@ Some others that are almost finished include:
 
 this will stop the node and then start it back up again
 
-./fire --info
-
-get info about the nodes status including details about the state of the blockchain and forging status
-
 ./fire --reinstall --reinstallOptions="options go here"
 
 reinstall fire, or heat, or both
