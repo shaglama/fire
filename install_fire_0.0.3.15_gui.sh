@@ -172,13 +172,29 @@ function getSnapshotUrl(){
 	echo "snapshot url: $snapshotUrl"
 	return 0
 }
+function getAutoUpgrade(){
+	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Auto Upgrade" --radiolist "Enabling the 'Auto Upgrade' setting enables automatic installation of Heat Ledger upgrades. Use arrows to move between options. Use spacebar to select option.Use tab to move between controls" 0 0 2 "Enabled" "Enable the 'auto upgrade' setting" "on" "Disabled" "Disable the 'auto upgrade' setting" "off" 2> $ans
+	continue=$?
+	if [[ $continue == 1 ]]; then
+		return 1
+	fi
+	autoUpgrade=`cat $ans`
+	if [[ $autoUpgrade == "Enabled" ]]; then
+		autoUpgrade="true"
+	else
+		autoUpgrade="false"
+	fi
+	rm $ans
+	echo "auto upgrade: $autoUpgrade"
+	return 0
+}
 function confirm(){
 	snapshotString="Download Snapshot: $useSnapshot"
 	if [[  $useSnapshot == "true" ]]; then
 		snapshotString="$snapshotString \n Snapshot Url: $snapshotUrl"
 	fi
 	
-	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Confirm Install Settings" --yesno "Fire will be installed with the following settings: \n Wallet Account Number: $walletAccountNumber \n Wallet Secret: $walletSecret \n Api Key: $apiKey \n Max Peers: $maxPeers \n Force Scan: $forceScan \n Force Validate: $forceValidate \n $snapshotString " 0 0 2> $ans
+	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Confirm Install Settings" --yesno "Fire will be installed with the following settings: \n Wallet Account Number: $walletAccountNumber \n Wallet Secret: $walletSecret \n Api Key: $apiKey \n Max Peers: $maxPeers \n Force Scan: $forceScan \n Force Validate: $forceValidate \n $snapshotString \n Auto Upgrade: $autoUpgrade " 0 0 2> $ans
 	continue=$?
 	if [[ $continue == 1 ]]; then
 		return 1
@@ -190,11 +206,11 @@ function installFire(){
 	installer="install_fire_$fireVersion.sh"
 	wget "https://raw.githubusercontent.com/shaglama/fire/development/$installer"
 	chmod +x "$installer"
-	/bin/bash "$installer" --options="heatId=$walletAccountNumber;apiKey=$apiKey;walletSecret=$walletSecret;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotUrl=$snapshotUrl"
+	/bin/bash "$installer" --options="heatId=$walletAccountNumber;apiKey=$apiKey;walletSecret=$walletSecret;forceScan=$forceScan;forceValidate=$forceValidate;useSnapshot=$useSnapshot;snapshotUrl=$snapshotUrl;autoUpgrade=$autoUpgrade"
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.8"
+fireVersion="0.0.3.15"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
@@ -207,6 +223,7 @@ forceScan=
 forceValidate=
 useSnapshot=
 snapshotUrl=
+autoUpgrade=
 
 
 getSudo
@@ -312,6 +329,15 @@ while [[ ! "$step" == "finished" ]];
 				;;
 			"getSnapshotUrl")
 				getSnapshotUrl
+				continue=$?
+				if [[ $continue == 0 ]]; then
+					step="getAutoUpgrade"
+				else
+					step="canceled"
+				fi
+				;;
+			"getAutoUpgrade")
+				getAutoUpgrade
 				continue=$?
 				if [[ $continue == 0 ]]; then
 					step="confirm"
