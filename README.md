@@ -1,5 +1,5 @@
-# fire 0.0.3.11
-January 15, 2018
+# fire 0.0.3.15
+January 16, 2018
 Randy Hoggard
 shaglama@gmail.com
 
@@ -9,6 +9,8 @@ Heat Ledger server installer and monitor for Ubuntu
 Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 or newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. However, it now performs its core tasks well. It currently will download the newest version of Heat Ledger, install  it, set up a service to monitor it, and initiate forging after the node has synced. It automatically enables the node to come up after reboots as well. It also provides basic information about the state of the node.
 
 #####     Whats new     ######################################################
+
+** Ability to refresh blockchain added
 
 ** Fire now has a text mode GUI for the installer
 
@@ -146,25 +148,23 @@ this will start Fire and the Heat Ledger node if it is not already running. Fire
 ./fire --stop
 this will stop Fire and the Heat Ledger  node if it is running
 
+./fire --restart
+this will stop Fire and the Heat Ledger node and then start both
+
 ./fire --upgrade
 this will check for a new version of Heat Ledger and install it if found
 
+./fire --refreshBlockchain
+this will delete the current blockchain and restart the node. If the useSnapshot setting is set to true, a snapshot will be downloaded and installed before restarting the node. 
 **************************************************************************************************
 
 Some others that are almost finished include:
-
-./fire --restart
 
 this will stop the node and then start it back up again
 
 ./fire --reinstall --reinstallOptions="options go here"
 
 reinstall fire, or heat, or both
-
-./fire --refresh 
-
-delete the old copy of blockchain, download a new one if desired, and restart the node
-
 
 **************************************************************************************************
 
