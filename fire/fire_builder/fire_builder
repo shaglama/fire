@@ -567,12 +567,16 @@ case "$MODE" in
 				done
 				echo "heat.myHallmark=$HALLMARK" >> $CONF
 				echo "$HALLMARK" > "$SHARED/dat/hallmark"
-				/bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
+				sudo /bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
 				sudo systemctl stop fire_watch.service
 				sudo systemctl start fire_watch.service 
 			fi
 			
 			echo "Fire installed!!!"
+			echo "Heat node should start automatically in 1 minute"
+			echo "use this command: \
+				cd fire && ./fire --info\
+				after the node has had time to start to view its status"
 			;;
 			
 		upgrade)
