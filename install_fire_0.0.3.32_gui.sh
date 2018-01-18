@@ -17,7 +17,8 @@ function getSudo(){
 	fi
 }
 function trim(){
-	echo "$1" | sed 's/^[ \t]*//;s/[ \t]*$//'
+	local out=`echo "$1" | sed 's/^[ \t]*//;s/[ \t]*$//'`
+	echo $out
 }
 function removeExtraWhiteSpace(){
 	echo -e "$1" | awk '{$1=$1};1'
@@ -54,7 +55,7 @@ function getWalletAccountNumber(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	walletAccountNumber=`cat $ans | trim`
+	walletAccountNumber=`cat $ans`
 	rm $ans
 	walletAccountNumber=`numbersOnly "$walletAccountNumber"`
 	walNumSize=${#walletAccountNumber}
@@ -73,7 +74,7 @@ function getWalletSecret(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	walletSecret=`cat $ans | trim`
+	walletSecret=`cat $ans`
 	rm $ans
 	walletSecret=`removeExtraWhiteSpace "$walletSecret"`
 	secNumSize=${#walletSecret}
@@ -108,8 +109,9 @@ function getMaxPeers(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	maxPeers=`cat $ans | trim`
+	maxPeers=`cat $ans`
 	rm $ans
+	maxPeers=`removeExtraWhiteSpace "$maxPeers"`
 	echo "Max Peers: $maxPeers"
 	return 0
 }
@@ -168,8 +170,9 @@ function getSnapshotUrl(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	snapshotUrl=`cat $ans | trim`
+	snapshotUrl=`cat $ans`
 	rm $ans
+	snapshotUrl=`removeExtraWhiteSpace "$snapshotUrl"`
 	echo "snapshot url: $snapshotUrl"
 	return 0
 }
@@ -211,7 +214,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.31"
+fireVersion="0.0.3.32"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
