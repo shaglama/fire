@@ -561,7 +561,7 @@ case "$MODE" in
 				maxTries=10;
 				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
 				while [[  "$done" == "false"  ]]; do
-					tries=(( $tries + 1 ))
+					tries=$(( $tries + 1 ))
 					if [[ $tries -gt $maxTries ]]; then
 						echo "Error: Failed to obtain hallmark!!! Exiting"
 						exit 1
