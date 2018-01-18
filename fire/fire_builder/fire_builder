@@ -268,7 +268,6 @@ case "$MODE" in
 				echo "IP Address is set. Using $IP_ADDRESS"
 			else
 				echo "IP Address was not set. Attempting to obtain public ip from myip.opendns.com"
-				#IP_ADDRESS=`curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'` &&
 				IP_ADDRESS=`dig +short myip.opendns.com @resolver1.opendns.com`
 				gotIp=$?
 				if [[ $gotIp ]]; then				
