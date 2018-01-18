@@ -56,7 +56,7 @@ function getLatestReleaseInfo(){
 function getHallmark(){
 CURRENT_DATE=$(date +'%Y-%m-%d') &&
 HALLMARK_URL="https://localhost.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
-HALLMARK_RESPONSE=`curl --max-time 30-X GET --header 'Accept: application/json' $HALLMARK_URL` &&
+HALLMARK_RESPONSE=`curl --max-time 30 -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
 HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
 echo "$HALLMARK"
 }
@@ -556,9 +556,16 @@ case "$MODE" in
 			sudo systemctl start fire_watch
 			
 			if [[ $hallmarkSet == "false" ]]; then
-				done="false";
+				done="false"
+				tries=0;
+				maxTries=10;
 				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
 				while [[  "$done" == "false"  ]]; do
+					tries=(( $tries + 1 ))
+					if [[ $tries -gt $maxTries ]]; then
+						echo "Error: Failed to obtain hallmark!!! Exiting"
+						exit 1
+					fi					
 					echo "attempting to obtain hallmark from local node...."
 					sleep 10s
 					HALLMARK=`getHallmark`
