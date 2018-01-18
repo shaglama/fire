@@ -53,6 +53,13 @@ function getLatestReleaseInfo(){
 	RELEASE_URL=`echo "$RELEASE_JSON" | jq -r ".assets[0] | .browser_download_url"`
 	RELEASE=`echo "$RELEASE_FILE" | rev | cut -c 5- | rev`
 }
+function getHallmark(){
+CURRENT_DATE=$(date +'%Y-%m-%d') &&
+HALLMARK_URL="https://localhost.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
+HALLMARK_RESPONSE=`curl --max-time 30-X GET --header 'Accept: application/json' $HALLMARK_URL` &&
+HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
+echo "$HALLMARK")
+}
 #program######################################################################
 #get arguments
 # As long as there is at least one more argument, keep looping
@@ -338,18 +345,19 @@ case "$MODE" in
 				echo "$AUTO_UPGRADE is invalid value for autoUpgrade. Valid values are true and false"
 				exit 1
 			fi
-			##GET HALLMARK HERE
-			if [[ $HALLMARK = *[!\ ]* ]]; then
+			GET HALLMARK HERE
+			#if [[ $HALLMARK = *[!\ ]* ]]; then
 				#already set
-				echo "$HALLMARK"
+				hallmarkSet="true"
 			else
-				CURRENT_DATE=$(date +'%Y-%m-%d') &&
-				HALLMARK_URL="https://heatwallet.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
-				echo "hallmark url: $HALLMARK_URL"
-				HALLMARK_RESPONSE=`curl -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
-				echo "hallmark response: $HALLMARK_RESPONSE"
-				HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
-				echo "HALLMARK: $HALLMARK"
+				hallmarkSet="false"
+				#CURRENT_DATE=$(date +'%Y-%m-%d') &&
+#				HALLMARK_URL="https://heatwallet.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
+#				echo "hallmark url: $HALLMARK_URL"
+#				HALLMARK_RESPONSE=`curl -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
+#				echo "hallmark response: $HALLMARK_RESPONSE"
+#				HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
+#				echo "HALLMARK: $HALLMARK"
 			fi
 	
 			#update repos and packages and install dependencies
@@ -483,10 +491,12 @@ case "$MODE" in
 				heat.myAddress=$IP_ADDRESS
 				heat.myPlatform=$HEAT_ID
 				heat.maxNumberOfConnectedPublicPeers=$MAX_PEERS
-				heat.myHallmark=$HALLMARK
 				heat.forceScan=$FORCE_SCAN
 				heat.forceValidate=$FORCE_VALIDATE
 			" > $CONF
+	#remove following from conf creation above
+	#heat.myHallmark=$HALLMARK
+	#will be added later after a check
 	
 			#save install vars
 			echo "$AUTO_UPGRADE" > "$SHARED/dat/autoUpgrade"
@@ -495,7 +505,7 @@ case "$MODE" in
 			echo "$(date)" > "$SHARED/dat/install_time"
 			echo "$IP_ADDRESS" > "$SHARED/dat/ipAddress"
 			echo "$MAX_PEERS" > "$SHARED/dat/maxPeers"
-			echo "$HALLMARK" > "$SHARED/dat/hallmark"
+			#echo "$HALLMARK" > "$SHARED/dat/hallmark"
 			echo "$FORCE_SCAN" > "$SHARED/dat/forceScan"
 			echo "$FORCE_VALIDATE" > "$SHARED/dat/forceValidate"
 			echo "$USE_SNAPSHOT" > "$SHARED/dat/useSnapshot"
@@ -534,10 +544,40 @@ case "$MODE" in
 			sudo systemctl enable fire_builder
 			sudo systemctl enable fire_watch
 			sudo systemctl daemon-reload
+			
+			if [[ $hallmarkSet == "true"]]; then
+				echo "heat.myHallmark=$HALLMARK" >> $CONF # be sure to append here and not overwrite
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"			
+			fi	
+						
 			echo "starting fire_builder"
 			sudo systemctl start fire_builder &&
 			echo "starting fire_watch"
 			sudo systemctl start fire_watch
+			
+			if [[ $hallmarkSet == "false" ]]; then
+				done=false;
+				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
+				while [[ ! $done]]; do
+					echo "attempting to obtain hallmark from local node...."
+					sleep 10s
+					HALLMARK=`getHallmark`
+					succeeded=$?
+					if [[ $succeeded ]]; then
+						if [[ `echo "$HALLMARK" | grep "hallmark"` ]]; then
+						 done=true
+						fi
+					else
+						echo "unable to obtain hallmark"
+					fi
+				done
+				echo "heat.myHallmark=$HALLMARK" >> $CONF
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"
+				/bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
+				sudo systemctl stop fire_watch.service
+				sudo systemctl start fire_watch.service 
+			fi
+			
 			echo "Fire installed!!!"
 			;;
 			
