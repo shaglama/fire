@@ -60,7 +60,6 @@ function getWalletAccountNumber(){
 	walletAccountNumber=`numbersOnly "$walletAccountNumber"`
 	walNumSize=${#walletAccountNumber}
 	if [[ $walNumSize -ge 18 ]]; then
-		echo "wallet account number: $walletAccountNumber"
 		return 0
 	else
 		return 2
@@ -79,7 +78,6 @@ function getWalletSecret(){
 	walletSecret=`removeExtraWhiteSpace "$walletSecret"`
 	secNumSize=${#walletSecret}
 	if [[ secNumSize -ge 1 ]]; then
-		echo "wallet secret: $walletSecret"
 		return 0
 	else
 		return 2
@@ -96,7 +94,6 @@ function getApiKey(){
 	apiKey=`removeExtraWhiteSpace "$apiKey"`
 	apiSize=${#apiKey}
 	if [[ $apiSize -ge 1 ]]; then
-		echo "Api Key: $apiKey"
 		return 0
 	else
 		return 2
@@ -111,9 +108,12 @@ function getMaxPeers(){
 	fi
 	maxPeers=`cat $ans`
 	rm $ans
-	maxPeers=`removeExtraWhiteSpace "$maxPeers"`
-	echo "Max Peers: $maxPeers"
-	return 0
+	maxPeers=`numbersOnly "$maxPeers"`
+	if [[ $maxPeers == *[!\ ]* && $maxPeers -ge 1 ]]; then
+		return 0
+	else
+		return 2
+	fi
 }
 function getForceScan(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Force Scan" --radiolist "Enabling the 'Force Scan' setting causes the node to rescan the blockchain. Use arrows to move between options. Use spacebar to select option.Use tab to move between controls" 0 0 2 "Enabled" "Enable the 'force scan' setting" "off" "Disabled" "Disable the 'force scan' setting" "on" 2> $ans
@@ -128,7 +128,6 @@ function getForceScan(){
 		forceScan="false"
 	fi
 	rm $ans
-	echo "force scan: $forceScan"
 	return 0
 	
 }
@@ -145,7 +144,6 @@ function getForceValidate(){
 		forceValidate="false"
 	fi
 	rm $ans
-	echo "force validate: $forceValidate"
 	return 0
 }
 function getUseSnapshot(){
@@ -161,7 +159,6 @@ function getUseSnapshot(){
 		useSnapshot="false"
 	fi
 	rm $ans
-	echo "use snapshot: $useSnapshot"
 	return 0
 }
 function getSnapshotUrl(){
@@ -173,8 +170,11 @@ function getSnapshotUrl(){
 	snapshotUrl=`cat $ans`
 	rm $ans
 	snapshotUrl=`removeExtraWhiteSpace "$snapshotUrl"`
-	echo "snapshot url: $snapshotUrl"
-	return 0
+	if [[ $snapshotUrl == *[!\ ]] ]]; then
+		return 0
+	else
+		return 2
+	fi
 }
 function getAutoUpgrade(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Auto Upgrade" --radiolist "Enabling the 'Auto Upgrade' setting enables automatic installation of Heat Ledger upgrades. Use arrows to move between options. Use spacebar to select option.Use tab to move between controls" 0 0 2 "Enabled" "Enable the 'auto upgrade' setting" "on" "Disabled" "Disable the 'auto upgrade' setting" "off" 2> $ans
@@ -189,7 +189,6 @@ function getAutoUpgrade(){
 		autoUpgrade="false"
 	fi
 	rm $ans
-	echo "auto upgrade: $autoUpgrade"
 	return 0
 }
 function confirm(){
@@ -341,7 +340,6 @@ while [[ ! "$step" == "finished" ]];
 				;;
 			"getAutoUpgrade")
 				getAutoUpgrade
-				echo $autoUpgrade
 				continue=$?
 				if [[ $continue == 0 ]]; then
 					step="confirm"
