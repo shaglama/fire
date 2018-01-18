@@ -1,0 +1,7 @@
+#!/bin/bash
+
+TEXT_TO_REPLACE="$1"
+TEXT_TO_REPLACE_WITH="$2"
+FILE="$3"
+
+sed -i "s%$TEXT_TO_REPLACE%$TEXT_TO_REPLACE_WITH%g" "$FILE" 

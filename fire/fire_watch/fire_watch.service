@@ -1,0 +1,19 @@
+[Unit]
+Description=Heat Ledger monitor service
+Wants=network.target
+Requires=fire_builder.service
+After=network.target fire_builder.service
+
+[Service]
+Type=simple
+User=changeMe
+WorkingDirectory=/home/randy/fireTest/fire/fire_watch
+ExecStart=fire_watch start
+ExecStop=fire_watch stop
+#ExecRestart=fire_watch restart
+Restart=always
+KillMode=process
+TimeoutSec=infinity
+RestartSec=30
+[Install]
+WantedBy=default.target

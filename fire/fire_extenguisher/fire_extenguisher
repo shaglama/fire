@@ -1,0 +1,37 @@
+#!/bin/bash
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+FIRE_HOME=$(readlink -f "$(dirname "$SCRIPT_DIR")")
+SHARED="$FIRE_HOME/fire_wood/shared"
+UTILS="$FIRE_HOME/fire_wood/utils"
+FS="$FIRE_HOME/fire_wood/fire_fs"
+
+if [[ "$1" == "--uninstall" ]]; then
+	sudo systemctl stop fire_watch
+	sudo systemctl stop fire_builder
+	sudo systemctl  disable fire_watch
+	sudo systemctl disable fire_builder
+	sudo rm /etc/systemd/system/fire_watch.service
+	sudo rm /etc/systemd/system/fire_builder.service
+	/bin/bash $SCRIPT
+	sudo umount fire_fs
+	#remove log file settings here, logs not yet implmeneted TODO
+	#sudo rm /etc/logrotate.d/fire
+	sudo rm -r $FIRE_HOME #don't enable this on development machine!!!
+	echo "fire was successfully uninstalled!"
+else
+	PIDFILE="$FS/pid/fire.pid"
+	PID=`cat $PIDFILE`
+	EXISTS=`/bin/bash $UTILS/doesFireExist`
+	echo $EXISTS
+	if [[ $EXISTS = "true" ]]; then
+		echo "extinguishing fire...."
+		sudo kill -9 "$PID"
+		screen -wipe
+		sudo rm $PIDFILE
+		touch $PIDFILE
+		echo "fire is out"
+	else
+		echo "fire is not lit"
+	fi
+fi

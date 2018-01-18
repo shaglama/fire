@@ -1,0 +1,110 @@
+#!/bin/bash
+script=`readlink -f $0`
+script_dir=`dirname $(readlink -f $0)`
+fire_home=$(readlink -f "$(dirname $script_dir)")
+fire_wood="$fire_home/fire_wood"
+utils="$fire_wood/utils"
+shared="$fire_wood/shared/"
+fs="$fire_wood/fire_fs"
+
+mode="not_set"
+
+function status(){
+	HEAT_VERSION=`cat $fire_home/fire_wood/shared/dat/heat_version`
+	STARTED=`cat "$fs/heat_start_time"`
+	NOW=`date +%s`
+	UPTIME=$(($NOW - $STARTED))
+	UP_DAYS=`echo "$UPTIME / (60 * 60 * 24)" | bc -l`
+	UP_WHOLE_DAYS=`echo "scale=0; $UP_DAYS / 1" | bc -l`
+	UP_HOURS=`echo "24 * ($UP_DAYS - $UP_WHOLE_DAYS)" | bc -l`
+	UP_WHOLE_HOURS=`echo "scale=0; $UP_HOURS / 1" | bc -l`
+	UP_MINUTES=`echo "scale=0;(60 * ($UP_HOURS - $UP_WHOLE_HOURS) / 1)" | bc -l`
+	
+	JSON=`curl -s https://heatwallet.com/status2.cgi` > /dev/null
+	CHAINHEIGHT=`echo $JSON | jq -r '.lastBlockchainFeederHeight' | tr -dc '0-9'`
+	CHAINBLOCK=`echo $JSON | jq -r '.lastBlock'`
+	CHAINBLOCK_TIME=`echo $JSON | jq -r '.lastBlockTimestamp'`
+	JSON=`curl -s -X GET --header 'Accept: application/json' 'http://localhost:7733/api/v1/blockchain/status'` > /dev/null
+	LAST_BLOCK=`echo $JSON | jq -r '.lastBlock'`
+	TIMESTAMP=`echo $JSON | jq -r '.lastBlockTimestamp'`
+	CURRENT_TIME=`date +%s`
+	URL="http://localhost:7733/api/v1/blockchain/block/$LAST_BLOCK/false"
+	JSON=`curl -s -X GET --header 'Accept: application/json' $URL` > /dev/null
+	HEIGHT=`echo $JSON | jq -r '.height'`
+	BEHIND=$(($CHAINHEIGHT - $HEIGHT))
+	BEHIND_TIME=$(($CHAINBLOCK_TIME - $TIMESTAMP))
+	DAYS=`echo "$BEHIND_TIME / (60 * 60 * 24)" | bc -l`
+	WHOLE_DAYS=`echo "scale=0; $DAYS / 1" | bc -l`
+	HOURS=`echo "24 * ($DAYS - $WHOLE_DAYS)" | bc -l`
+	WHOLE_HOURS=`echo "scale=0; $HOURS / 1" | bc -l`
+	MINUTES=`echo "scale=0;(60 * ($HOURS - $WHOLE_HOURS) / 1)" | bc -l`
+	
+	echo "Heat Ledger Version: $HEAT_VERSION"
+	echo "Uptime: $UP_WHOLE_DAYS days $UP_WHOLE_HOURS hours $UP_MINUTES minutes"
+	echo " "
+	echo "Chain Height: $CHAINHEIGHT"
+	echo "Node Height: $HEIGHT"
+	echo "$BEHIND blocks behind"
+	echo "$WHOLE_DAYS days $WHOLE_HOURS hours $MINUTES minutes behind"
+	echo "Current Chain Block: $CHAINBLOCK"
+	echo "Current Chain Timestamp: $CHAINBLOCK_TIME"
+	echo "Current Node Block: $LAST_BLOCK"
+	echo "Current Node Timestamp: $TIMESTAMP"
+	if [[ $TIMESTAMP -lt $CHAINBLOCK_TIME ]]; then
+	        echo "not synced"
+	else 
+	        echo "synced"
+	fi
+}
+
+function isSynced(){
+	if [[ `status | grep "not synced"` ]]; then
+        echo "false"
+	else
+        echo "true"
+	fi
+}
+
+#get arguments
+# as long as there is at least one more argument, keep looping
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+			-i|--isSynced)
+				if [[ "$mode" == "not_set" ]]; then
+					mode="isSynced"
+				else
+					echo "cannot set mode to isSynced. mode is already set"
+				fi
+				;;
+			-s|--status)
+				if [[ "$mode" == "not_set" ]]; then
+					mode="status"
+				else
+					echo "cannot set mode to status. mode is already set"
+				fi
+				;;
+	 		*)
+        		# do whatever you want with extra options
+        		echo "unknown option '$key'"
+        		;;
+    esac
+    # shift after checking all the cases to get the next option
+    shift
+done
+if [[ $mode == "not_set" ]]; then
+	mode="status"
+fi
+case "$mode" in
+	"isSynced")
+		isSynced
+		;;
+		
+	"status")
+		status
+		;;
+
+	*)
+		echo "invalid mode: $mode"
+esac
+

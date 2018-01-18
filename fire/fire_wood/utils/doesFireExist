@@ -1,0 +1,28 @@
+#!/bin/bash
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+PARENT=`dirname $SCRIPT_DIR`
+FIRE_HOME=$(readlink -f "$(dirname $PARENT)")
+SHARED="$FIRE_HOME/fire_wood/shared"
+UTILS="$FIRE_HOME/fire_wood/utils"
+FS="$FIRE_HOME/fire_wood/fire_fs"
+
+
+PIDFILE="$FS/pid/fire.pid"
+if [[ -f "$PIDFILE" ]]; then
+	PID=`cat "$PIDFILE"`
+	#echo "pid: $PID"
+	if [[ "$PID" == "" ]]; then
+		echo "false"
+	else
+		PROCESS=$(ps -C 'screen' | grep "$PID" ) 
+		#echo  "process: $PROCESS"
+		if [[ $PROCESS = *[!\ ]* ]]; then
+			echo "true"
+		else
+        		echo  "false"
+		fi
+	fi
+else
+	echo "false"
+fi

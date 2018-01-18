@@ -1,0 +1,16 @@
+[Unit]
+Description=Fire Initialization Service
+Wants=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/randy/fireTest/fire/fire_builder
+ExecStart=fire_builder --mode=init
+ExecStop=fire_builder --mode=stop
+KillMode=process
+
+
+[Install]
+WantedBy=default.target
