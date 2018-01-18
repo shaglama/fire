@@ -558,7 +558,7 @@ case "$MODE" in
 			if [[ $hallmarkSet == "false" ]]; then
 				done=false;
 				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
-				while [[ ! $done]]; do
+				while [[ ! $done ]]; do
 					echo "attempting to obtain hallmark from local node...."
 					sleep 10s
 					HALLMARK=`getHallmark`
