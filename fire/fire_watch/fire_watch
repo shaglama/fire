@@ -13,8 +13,6 @@ RUNNING="true"
 INTERVAL="1m"
 
 function start(){
-	#rm "$PIDFILE"
-	#touch "$PIDFILE"
 	echo "logging to  $LOG"
 	lastUpgradeCheck=0
 	upgradeInterval=$(( 60 * 60 * 1 ))

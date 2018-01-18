@@ -11,12 +11,10 @@ FS="$FIRE_HOME/fire_wood/fire_fs"
 PIDFILE="$FS/pid/fire.pid"
 if [[ -f "$PIDFILE" ]]; then
 	PID=`cat "$PIDFILE"`
-	#echo "pid: $PID"
 	if [[ "$PID" == "" ]]; then
 		echo "false"
 	else
 		PROCESS=$(ps -C 'screen' | grep "$PID" ) 
-		#echo  "process: $PROCESS"
 		if [[ $PROCESS = *[!\ ]* ]]; then
 			echo "true"
 		else

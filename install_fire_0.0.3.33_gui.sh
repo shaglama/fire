@@ -206,7 +206,6 @@ function confirm(){
 	return 0
 }
 function installFire(){
-	echo "$walletAccountNumber"
 	installer="install_fire_$fireVersion.sh"
 	wget "https://raw.githubusercontent.com/shaglama/fire/development/$installer"
 	chmod +x "$installer"
@@ -214,7 +213,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.32"
+fireVersion="0.0.3.33"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"

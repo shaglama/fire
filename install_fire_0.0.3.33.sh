@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.3.32
+#version 0.0.3.33
 #Janurary 18, 2018
 #Randy Hoggard
 
@@ -109,8 +109,6 @@ function urlencode() {
     LC_COLLATE=$old_lc_collate
 }
 function urlEncodeSpace(){
-	#local out=`echo "$1" | tr -s ' ' '%20'`
-	#echo "$out"
 	local replace=" "
 	local with="\%20"
 	local inString=$1
@@ -120,8 +118,6 @@ function urlEncodeSpace(){
 	
 }
 function urlDecodeSpace(){
-	#local out=`echo "$1" | tr -s '%20' ' '`
-	#echo "$out"
 	local replace="\%20"
 	local with=" "
 	local inString=$1
@@ -151,7 +147,7 @@ function split() {
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 script=`readlink -f $0`
 scriptDir=`dirname $(readlink -f $0)`
-version="0.0.3.32"
+version="0.0.3.33"
 file="fire_$version.tar.gz"
 ##get any arguments for installer
 while [[ $# -gt 0 ]]; do
@@ -173,7 +169,7 @@ echo "$options"
 if [[ ! $options = "" ]]; then
 	echo "processing options...."
 		split "$options" ";" o_array
-		echo "${o_array[*]}" 
+		#echo "${o_array[*]}" #uncomment for debug only
       for opt in ${o_array[*]};
 		do
 			optArr=
@@ -184,8 +180,8 @@ if [[ ! $options = "" ]]; then
 			if [[ `echo $optVal | grep "%20"` ]]; then
 				optVal=`urlDecodeSpace "$optVal"`
 			fi
-			echo "option name $optName"
-			echo "option value $optVal"
+			#echo "option name $optName" #uncomment for debug only
+			#echo "option value $optVal" #uncomment for debug only
 
 			case $optName in
 				
@@ -256,5 +252,4 @@ cd fire/
 echo "$version" > "fire_wood/shared/dat/fire_version"
 cd fire_builder
 /bin/bash -c "./fire_builder --mode=install --user=$heatUser --password=$password --accountNumber=$heatId --walletSecret=\"$walletSecret\" --key=$apiKey --ipAddress=$ipAddress --maxPeers=$maxPeers --hallmark=$hallmark --forceScan=$forceScan --forceValidate=$forceValidate --downloadSnapshot=$useSnapshot --snapshotUrl=$snapshotUrl --autoUpgrade=$autoUpgrade"
-#echo "heatUser $heatUser; password $password; heatId $heatId; walletSecret $walletSecret; ipAddress $ipAddress; maxPeers $maxPeers; hallmark $hallmark; forceScan $forceScan; forceValidate $forceValidate; useSnapshot $useSnapshot; snapshotURL snapshotUrl"	
 

@@ -6,11 +6,6 @@ FIRE_HOME=$(readlink -f "$SCRIPT_DIR")
 SHARED="$FIRE_HOME/shared"
 UTILS="$FIRE_HOME/utils"
 MODE="not_set"
-#echo $SCRIPT
-#echo $SCRIPT_DIR
-#echo $FIRE_HOME
-#echo $SHARED
-#echo $UTILS
 
 ##### FUNCTIONS ########################################################################
 #split stringToSplit delimiter nameOfArray 
