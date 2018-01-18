@@ -545,7 +545,7 @@ case "$MODE" in
 			sudo systemctl enable fire_watch
 			sudo systemctl daemon-reload
 			
-			if [[ $hallmarkSet == "true"]]; then
+			if [[ $hallmarkSet == "true" ]]; then
 				echo "heat.myHallmark=$HALLMARK" >> $CONF # be sure to append here and not overwrite
 				echo "$HALLMARK" > "$SHARED/dat/hallmark"			
 			fi	
