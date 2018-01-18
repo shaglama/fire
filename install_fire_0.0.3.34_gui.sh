@@ -17,7 +17,8 @@ function getSudo(){
 	fi
 }
 function trim(){
-	echo "$1" | sed 's/^[ \t]*//;s/[ \t]*$//'
+	local out=`echo "$1" | sed 's/^[ \t]*//;s/[ \t]*$//'`
+	echo $out
 }
 function removeExtraWhiteSpace(){
 	echo -e "$1" | awk '{$1=$1};1'
@@ -35,7 +36,8 @@ function cleanup(){
 	rm -r -f $ans
 }
 function cancel(){
-	echo "need to implemnt cancel function in fire_place.sh"
+	echo "installation was cancelled"
+	return -1
 }
 function welcome(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Install Fire" --yesno "This installer will set up the Heat Ledger node manager 'Fire'. Press continue to get started " 10 30
@@ -58,7 +60,6 @@ function getWalletAccountNumber(){
 	walletAccountNumber=`numbersOnly "$walletAccountNumber"`
 	walNumSize=${#walletAccountNumber}
 	if [[ $walNumSize -ge 18 ]]; then
-		echo "wallet account number: $walletAccountNumber"
 		return 0
 	else
 		return 2
@@ -77,7 +78,6 @@ function getWalletSecret(){
 	walletSecret=`removeExtraWhiteSpace "$walletSecret"`
 	secNumSize=${#walletSecret}
 	if [[ secNumSize -ge 1 ]]; then
-		echo "wallet secret: $walletSecret"
 		return 0
 	else
 		return 2
@@ -94,7 +94,6 @@ function getApiKey(){
 	apiKey=`removeExtraWhiteSpace "$apiKey"`
 	apiSize=${#apiKey}
 	if [[ $apiSize -ge 1 ]]; then
-		echo "Api Key: $apiKey"
 		return 0
 	else
 		return 2
@@ -109,8 +108,12 @@ function getMaxPeers(){
 	fi
 	maxPeers=`cat $ans`
 	rm $ans
-	echo "Max Peers: $maxPeers"
-	return 0
+	maxPeers=`numbersOnly "$maxPeers"`
+	if [[ $maxPeers == *[!\ ]* && $maxPeers -ge 1 ]]; then
+		return 0
+	else
+		return 2
+	fi
 }
 function getForceScan(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Force Scan" --radiolist "Enabling the 'Force Scan' setting causes the node to rescan the blockchain. Use arrows to move between options. Use spacebar to select option.Use tab to move between controls" 0 0 2 "Enabled" "Enable the 'force scan' setting" "off" "Disabled" "Disable the 'force scan' setting" "on" 2> $ans
@@ -125,7 +128,6 @@ function getForceScan(){
 		forceScan="false"
 	fi
 	rm $ans
-	echo "force scan: $forceScan"
 	return 0
 	
 }
@@ -142,7 +144,6 @@ function getForceValidate(){
 		forceValidate="false"
 	fi
 	rm $ans
-	echo "force validate: $forceValidate"
 	return 0
 }
 function getUseSnapshot(){
@@ -158,7 +159,6 @@ function getUseSnapshot(){
 		useSnapshot="false"
 	fi
 	rm $ans
-	echo "use snapshot: $useSnapshot"
 	return 0
 }
 function getSnapshotUrl(){
@@ -169,8 +169,12 @@ function getSnapshotUrl(){
 	fi
 	snapshotUrl=`cat $ans`
 	rm $ans
-	echo "snapshot url: $snapshotUrl"
-	return 0
+	snapshotUrl=`removeExtraWhiteSpace "$snapshotUrl"`
+	if [[ $snapshotUrl == *[!\ ]* ]]; then
+		return 0
+	else
+		return 2
+	fi
 }
 function getAutoUpgrade(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Auto Upgrade" --radiolist "Enabling the 'Auto Upgrade' setting enables automatic installation of Heat Ledger upgrades. Use arrows to move between options. Use spacebar to select option.Use tab to move between controls" 0 0 2 "Enabled" "Enable the 'auto upgrade' setting" "on" "Disabled" "Disable the 'auto upgrade' setting" "off" 2> $ans
@@ -185,7 +189,6 @@ function getAutoUpgrade(){
 		autoUpgrade="false"
 	fi
 	rm $ans
-	echo "auto upgrade: $autoUpgrade"
 	return 0
 }
 function confirm(){
@@ -202,7 +205,6 @@ function confirm(){
 	return 0
 }
 function installFire(){
-	echo "$walletAccountNumber"
 	installer="install_fire_$fireVersion.sh"
 	wget "https://raw.githubusercontent.com/shaglama/fire/development/$installer"
 	chmod +x "$installer"
@@ -210,7 +212,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.15"
+fireVersion="0.0.3.34"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
@@ -321,7 +323,7 @@ while [[ ! "$step" == "finished" ]];
 					if [[ $useSnapshot == "true" ]]; then
 						step="getSnapshotUrl"
 					else				
-						step="confirm"
+						step="getAutoUpgrade"
 					fi
 				else
 					step="canceled"
