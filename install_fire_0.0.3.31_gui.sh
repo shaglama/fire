@@ -54,7 +54,7 @@ function getWalletAccountNumber(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	walletAccountNumber=`cat $ans`
+	walletAccountNumber=`cat $ans | trim`
 	rm $ans
 	walletAccountNumber=`numbersOnly "$walletAccountNumber"`
 	walNumSize=${#walletAccountNumber}
@@ -73,7 +73,7 @@ function getWalletSecret(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	walletSecret=`cat $ans`
+	walletSecret=`cat $ans | trim`
 	rm $ans
 	walletSecret=`removeExtraWhiteSpace "$walletSecret"`
 	secNumSize=${#walletSecret}
@@ -90,7 +90,7 @@ function getApiKey(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	apiKey=`cat $ans`
+	apiKey=`cat $ans | trim`
 	rm $ans
 	apiKey=`removeExtraWhiteSpace "$apiKey"`
 	apiSize=${#apiKey}
@@ -108,7 +108,7 @@ function getMaxPeers(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	maxPeers=`cat $ans`
+	maxPeers=`cat $ans | trim`
 	rm $ans
 	echo "Max Peers: $maxPeers"
 	return 0
@@ -168,7 +168,7 @@ function getSnapshotUrl(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	snapshotUrl=`cat $ans`
+	snapshotUrl=`cat $ans | trim`
 	rm $ans
 	echo "snapshot url: $snapshotUrl"
 	return 0
@@ -211,7 +211,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.30"
+fireVersion="0.0.3.31"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
