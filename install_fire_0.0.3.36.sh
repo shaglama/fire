@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.3.35
+#version 0.0.3.36
 #Janurary 18, 2018
 #Randy Hoggard
 
@@ -147,7 +147,7 @@ function split() {
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 script=`readlink -f $0`
 scriptDir=`dirname $(readlink -f $0)`
-version="0.0.3.35"
+version="0.0.3.36"
 file="fire_$version.tar.gz"
 ##get any arguments for installer
 while [[ $# -gt 0 ]]; do
@@ -163,25 +163,20 @@ while [[ $# -gt 0 ]]; do
 	esac
 	shift
 done	
-#options=`trim "$options"`
 options=`urlEncodeSpace "$options"`
 echo "$options"
 if [[ ! $options = "" ]]; then
 	echo "processing options...."
 		split "$options" ";" o_array
-		#echo "${o_array[*]}" #uncomment for debug only
       for opt in ${o_array[*]};
 		do
 			optArr=
 			split "$opt" "=" optArr
 			optName="${optArr[0]}"
-			echo "optArr 1 ${optArr[1]}"
 			optVal="${optArr[1]}"
 			if [[ `echo $optVal | grep "%20"` ]]; then
 				optVal=`urlDecodeSpace "$optVal"`
 			fi
-			#echo "option name $optName" #uncomment for debug only
-			#echo "option value $optVal" #uncomment for debug only
 
 			case $optName in
 				
