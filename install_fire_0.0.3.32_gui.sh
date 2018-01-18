@@ -91,7 +91,7 @@ function getApiKey(){
 	if [[ $continue == 1 ]]; then
 		return 1
 	fi
-	apiKey=`cat $ans | trim`
+	apiKey=`cat $ans`
 	rm $ans
 	apiKey=`removeExtraWhiteSpace "$apiKey"`
 	apiSize=${#apiKey}
