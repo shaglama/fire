@@ -556,16 +556,16 @@ case "$MODE" in
 			sudo systemctl start fire_watch
 			
 			if [[ $hallmarkSet == "false" ]]; then
-				done=false;
+				done="false";
 				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
-				while [[ ! $done ]]; do
+				while [[  "$done" == "false"  ]]; do
 					echo "attempting to obtain hallmark from local node...."
 					sleep 10s
 					HALLMARK=`getHallmark`
 					succeeded=$?
 					if [[ $succeeded ]]; then
 						if [[ `echo "$HALLMARK" | grep "hallmark"` ]]; then
-						 done=true
+						 done="true"
 						fi
 					else
 						echo "unable to obtain hallmark"
