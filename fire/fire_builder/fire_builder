@@ -346,7 +346,7 @@ case "$MODE" in
 				exit 1
 			fi
 			GET HALLMARK HERE
-			#if [[ $HALLMARK = *[!\ ]* ]]; then
+			if [[ $HALLMARK = *[!\ ]* ]]; then
 				#already set
 				hallmarkSet="true"
 			else

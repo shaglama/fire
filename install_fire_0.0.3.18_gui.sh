@@ -210,7 +210,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.17"
+fireVersion="0.0.3.18"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
