@@ -536,7 +536,7 @@ case "$MODE" in
 			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_builder/fire_builder.service"
 	
-			sudo cp  connect sword cruel nose broken sneak taint explode bliss shade bright moral"$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
+			sudo cp "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
 			sudo cp "$FIRE_HOME/fire_watch/fire_watch.service" "/etc/systemd/system/fire_watch.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_builder" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_watch" "$FIRE_HOME/fire_watch/fire_watch.service"
