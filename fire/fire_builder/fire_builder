@@ -574,9 +574,12 @@ case "$MODE" in
 			
 			echo "Fire installed!!!"
 			echo "Heat node should start automatically in 1 minute"
-			echo "use this command: \
-				cd fire && ./fire --info\
-				after the node has had time to start to view its status"
+			echo "After the node has had time to start, move to the fire folder:
+			example:
+			cd fire
+			then run the command:
+			./fire --info to view its status"
+			
 			;;
 			
 		upgrade)
