@@ -421,7 +421,7 @@ case "$MODE" in
 						*.bz2)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tjvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xjvf $FILE
 							else
@@ -437,7 +437,7 @@ case "$MODE" in
 						*.gz)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tzvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xzvf $FILE
 							else
@@ -451,7 +451,7 @@ case "$MODE" in
 						*.tar)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
 								rm $DEST
 								tar -xvf $FILE
 							else
@@ -577,7 +577,7 @@ case "$MODE" in
 					succeeded=$?
 					if [[ $succeeded ]]; then
 					echo $HALLMARK
-						if [[ "$HALLMARK" == *[!/ ]* ]]; then
+						if [[ "$HALLMARK" == *[!\ ]* ]]; then
 						 	done="true"
 						else
 							echo "unable to obtain hallmark"
@@ -674,7 +674,7 @@ case "$MODE" in
 						*.bz2)
 							wget $snapUrl
 							BC_FOLDER=`tar -tjvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xjvf $FILE
 							else
@@ -690,7 +690,7 @@ case "$MODE" in
 						*.gz)
 							wget $snapUrl
 							BC_FOLDER=`tar -tzvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xzvf $FILE
 							else
@@ -704,7 +704,7 @@ case "$MODE" in
 						*.tar)
 							wget $snapUrl
 							BC_FOLDER=`tar -tvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
 								rm $DEST
 								tar -xvf $FILE
 							else
