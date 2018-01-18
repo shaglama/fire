@@ -211,7 +211,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.27"
+fireVersion="0.0.3.28"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
@@ -322,7 +322,7 @@ while [[ ! "$step" == "finished" ]];
 					if [[ $useSnapshot == "true" ]]; then
 						step="getSnapshotUrl"
 					else				
-						step="getAutoUpgrade""
+						step="getAutoUpgrade"
 					fi
 				else
 					step="canceled"
