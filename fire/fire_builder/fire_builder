@@ -58,7 +58,7 @@ CURRENT_DATE=$(date +'%Y-%m-%d') &&
 HALLMARK_URL="https://localhost.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
 HALLMARK_RESPONSE=`curl --max-time 30-X GET --header 'Accept: application/json' $HALLMARK_URL` &&
 HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
-echo "$HALLMARK")
+echo "$HALLMARK"
 }
 #program######################################################################
 #get arguments
@@ -536,7 +536,7 @@ case "$MODE" in
 			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_builder/fire_builder.service"
 	
-			sudo cp  "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
+			sudo cp  connect sword cruel nose broken sneak taint explode bliss shade bright moral"$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
 			sudo cp "$FIRE_HOME/fire_watch/fire_watch.service" "/etc/systemd/system/fire_watch.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_builder" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_watch" "$FIRE_HOME/fire_watch/fire_watch.service"
