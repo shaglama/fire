@@ -35,7 +35,8 @@ function cleanup(){
 	rm -r -f $ans
 }
 function cancel(){
-	echo "need to implemnt cancel function in fire_place.sh"
+	echo "installation was cancelled"
+	return -1
 }
 function welcome(){
 	whiptail --backtitle "Fire Installer" --yes-button "Continue" --no-button "Exit" --title "Install Fire" --yesno "This installer will set up the Heat Ledger node manager 'Fire'. Press continue to get started " 10 30
@@ -210,7 +211,7 @@ function installFire(){
 	rm $installer
 }
 ########## PROGRAM ##################################################
-fireVersion="0.0.3.26"
+fireVersion="0.0.3.27"
 fireDir=$(mktemp -d -t fireTemp.XXXXXXXXXX ) #####security versiontmp.XXXXXXXXXX)
 ans=$fireDir/gui
 step="welcome"
@@ -321,7 +322,7 @@ while [[ ! "$step" == "finished" ]];
 					if [[ $useSnapshot == "true" ]]; then
 						step="getSnapshotUrl"
 					else				
-						step="confirm"
+						step="getAutoUpgrade""
 					fi
 				else
 					step="canceled"
@@ -338,6 +339,7 @@ while [[ ! "$step" == "finished" ]];
 				;;
 			"getAutoUpgrade")
 				getAutoUpgrade
+				echo $autoUpgrade
 				continue=$?
 				if [[ $continue == 0 ]]; then
 					step="confirm"
