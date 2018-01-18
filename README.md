@@ -140,7 +140,7 @@ this will connect to the Heat Ledger nodes log file and follow the output. To ex
 
 ./fire --attachToNode
 
-this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y.
+this will open the screen session the node is running in to view its output. To exit (detach) hold CTRL and press A. Then press D. To kill the node, hold CTRL and press K. Then press Y. Note; the node will be automatically restarted by the service. To stop the node without restart use the stop command.
 
 ./fire --start
 this will start Fire and the Heat Ledger node if it is not already running. Fire is configured to start at boot so you generally don't need to use this unless you manually stop the node
