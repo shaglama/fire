@@ -28,29 +28,29 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 Download the GUI install script:
 
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.11_gui.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.15_gui.sh
 
 
 ### Step 2
 Set the execute permission:
 
-chmod +x install_fire_0.0.3.11_gui.sh
+chmod +x install_fire_0.0.3.15_gui.sh
 
 ### Step 3
 Run the installer
 
-./install_fire_0.0.3.11_gui.sh
+./install_fire_0.0.3.15_gui.sh
 
 ##     Installation With Cli Script     ######################################
 ### Step 1
 Download the install script:
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.11.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.15.sh
 
 ### Step 2
 Set the execute permissions:
 
-chmod +x install_fire_0.0.3.11.sh
+chmod +x install_fire_0.0.3.15.sh
 
 ### Step 3
 Choose whether you would like set the options by editing the script or set the options by passing arguments to the command
@@ -59,7 +59,7 @@ If you choose to edit the script, proceed to step 3a. If you would rather pass t
 #### Step 3a
 Edit the installer script and change the options to your liking (Available options described later in this document):
 
-nano install_fire_0.0.3.11.sh
+nano install_fire_0.0.3.15.sh
 
 ### Step 4
 If you set the options by editing the script in step 3, proceed to step 4a. If you decided to pass the options as arguments in step 3, proceed to step 4b
@@ -67,12 +67,12 @@ If you set the options by editing the script in step 3, proceed to step 4a. If y
 #### Step 4a
 Run the installer script
 
-./install_fire_0.0.3.11.sh
+./install_fire_0.0.3.15.sh
 
 #### Step 4b
 Pass the options as argument to the installer and run installer script
 
-./install_fire_0.0.3.11.sh --options="opition1Name=option1Val;option2Name=option2Val"
+./install_fire_0.0.3.15.sh --options="opition1Name=option1Val;option2Name=option2Val"
 
 Note:  see 'options' option below
 
