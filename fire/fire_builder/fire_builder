@@ -571,8 +571,11 @@ case "$MODE" in
 					HALLMARK=`getHallmark`
 					succeeded=$?
 					if [[ $succeeded ]]; then
+					echo $HALLMARK
 						if [[ `echo "$HALLMARK" | grep "hallmark"` ]]; then
-						 done="true"
+						 	done="true"
+						else
+							echo "unable to obtain hallmark"
 						fi
 					else
 						echo "unable to obtain hallmark"
