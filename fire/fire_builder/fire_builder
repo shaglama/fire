@@ -350,8 +350,8 @@ case "$MODE" in
 				echo "$AUTO_UPGRADE is invalid value for autoUpgrade. Valid values are true and false"
 				exit 1
 			fi
-			GET HALLMARK HERE
-			if [[ $HALLMARK = *[!\ ]* ]]; then
+			#GET HALLMARK HERE
+			if [[ $HALLMARK == *[!\ ]* ]]; then
 				#already set
 				hallmarkSet="true"
 			else
