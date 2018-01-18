@@ -10,7 +10,6 @@ User=changeMe
 WorkingDirectory=/home/randy/fireTest/fire/fire_watch
 ExecStart=fire_watch start
 ExecStop=fire_watch stop
-#ExecRestart=fire_watch restart
 Restart=always
 KillMode=process
 TimeoutSec=infinity

@@ -53,21 +53,24 @@ function getLatestReleaseInfo(){
 	RELEASE_URL=`echo "$RELEASE_JSON" | jq -r ".assets[0] | .browser_download_url"`
 	RELEASE=`echo "$RELEASE_FILE" | rev | cut -c 5- | rev`
 }
+function getHallmark(){
+CURRENT_DATE=$(date +'%Y-%m-%d') &&
+HALLMARK_URL="http://localhost:7733/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
+HALLMARK_RESPONSE=`curl --max-time 30 -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
+GOT_HALLMARK=$?
+if [[ ! $GOT_HALLMARK ]]; then
+	return 1
+fi
+HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
+echo "$HALLMARK"
+return 0
+}
 #program######################################################################
 #get arguments
 # As long as there is at least one more argument, keep looping
 while [[ $# -gt 0 ]]; do
 	key="$1"
 	case "$key" in
-		# This is a flag type option. Will catch either -f or --foo
-		# -f|--foo)
-		#FOO=1
-		#;;
-		# Also a flag type option. Will catch either -b or --bar
-		#-b|--bar)
-		#BAR=1
-		#;;
-		# This is an arg value type option. Will catch -u userName or --user userName
 		-u|--user)
 			shift # past the key and to the value
 			HEAT_USER="$1"
@@ -134,7 +137,6 @@ while [[ $# -gt 0 ]]; do
 			shift
 			MODE="$1"
 			;;
-			# This is an arg=value type option. Will catch -u=userName or --user=userName
 		-u=*|--user=*)
 			# No need to shift here since the value is part of the same string
 			HEAT_USER="${key#*=}"
@@ -237,43 +239,42 @@ case "$MODE" in
 			if id "$HEAT_USER" >/dev/null 2>&1; then
 				#user exists
 				#proceed
-				echo $HEAT_USER
+				echo "verified user"
 			else
 				#user does not exist
 				# quietly add a user without password
 				echo "adding user: $HEAT_USER"
-				sudo adduser --quiet --disabled-password --shell /bin/bash --home /home/$HEAT_USER --gecos "User" $HEAT_USER
+				sudo adduser --quiet --disabled-password --shell /bin/bash --home /home/$HEAT_USER --gecos "User" $HEAT_USER				
 				#if password was supplied, set user password
 				if [[ $PASSWORD = *[!\ ]* ]]; then
 					# set password
 					sudo echo "$HEAT_USER:$PASSWORD" | chpasswd
+					echo "password was not set, it will need to be set manually"
 				fi
 	
 			fi
-	#		#make sure home directory exists for user
-	#		if test -d /home/$HEAT_USER/;
-	# 		then
-	#    			#directory exists
-	#    			echo "home exists"
-	#		else
-	#   			#directory does not exist
-	#   			sudo mkdir /home/$HEAT_USER
-	#   			sudo chown -r  "$USER:$HEAT_USER" /home/$HEAT_USER
-	#		fi
 	
 			#make sure node ip is set, if not try to determine what it is
 			if [[ $IP_ADDRESS = *[!\ ]* ]]; then
 				#already set
-				echo "$IP_ADDRESS"
+				echo "IP Address is set. Using $IP_ADDRESS"
 			else
-				IP_ADDRESS=`curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'` &&
-				echo "IP ADDRESS: $IP_ADDRESS"
+				echo "IP Address was not set. Attempting to obtain public ip from myip.opendns.com"
+				#IP_ADDRESS=`curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'` &&
+				IP_ADDRESS=`dig +short myip.opendns.com @resolver1.opendns.com`
+				gotIp=$?
+				if [[ $gotIp ]]; then				
+					echo "Got public IP Address. Using $IP_ADDRESS"
+				else
+					echo "Error: Unable to get public IP Address!!! Exiting"
+					exit 1
+				fi
 			fi
 	
 			#Verify HEAT_ID (accountNumber in arguments)
 			if [[ $HEAT_ID = *[!\ ]* ]]; then
 				#already set
-				echo "$HEAT_ID"
+				echo "Heat Id was set. Using: $HEAT_ID"
 			else
 				echo "HEAT_ID was not set in this script or passed in as an argument (accountNumber). HEAT_ID is required. Exiting script."
 				exit 1
@@ -281,15 +282,14 @@ case "$MODE" in
 
 			##Verify and encode WALLET_SECRET
 			if [[ $WALLET_SECRET = *[!\ ]* ]]; then
-				echo "ws:$WALLET_SECRET"
 				#already set
 				#URI encode it
 				if [[ `echo $WALLET_SECRET | grep "%20"` ]]; then
-					echo "already encoded"
+					echo "Verified wallet secret"
 				else
+					echo "Encoding wallet secret"
 					ENCODED=$(urlencode "$WALLET_SECRET")
-					#WALLET_SECRET="$ENCODED"
-					echo $ENCODED
+					echo "Verified wallet secret"					
 				fi
 			else
 				echo "WALLET_SECRET was not set in this script or passed in as an argument. WALLET_SECRET IS REQUIRED. Exiting script."
@@ -301,7 +301,7 @@ case "$MODE" in
 			FS_LC=`echo "$FORCE_SCAN" | sed 's/.*/\L&/'`
 			if [[ "$FS_LC" == "true" || "$FS_LC" == "false" ]]; then
 				FORCE_SCAN="$FS_LC"
-				echo "Force Scan = $FORCE_SCAN"
+				echo "Force scan was set to $FORCE_SCAN"
 			else
 				echo "$FORCE_SCAN is invalid value for force scan. Valid values are true and false"
 				exit 1
@@ -312,7 +312,7 @@ case "$MODE" in
 			FV_LC=`echo $FORCE_VALIDATE | sed 's/.*/\L&/'`
 			if [[ "$FV_LC" == "true" || "$FV_LC" == "false" ]]; then
 				FORCE_VALIDATE="$FV_LC"
-				echo "Force validate = $FORCE_VALIDATE"
+				echo "Force validate was set to $FORCE_VALIDATE"
 			else
 				echo "$FORCE_VALIDATE is invalid value for force validate. Valid values are true and false"
 				exit 1
@@ -323,7 +323,7 @@ case "$MODE" in
 			US_LC=`echo $USE_SNAPSHOT | sed 's/.*/\L&/'`
 			if [[ "$US_LC" == "true" || "$US_LC" == "false" ]]; then
 				USE_SNAPSHOT="$US_LC"
-				echo "Use snapshot: $USE_SNAPSHOT"
+				echo "Use snapshot was set to $USE_SNAPSHOT"
 			else
 				echo "$USE_SNAPSHOT is invalid value for Download Snapshot (USE_SNAPSHOT). Valid values are true and false"
 				exit 1
@@ -333,23 +333,19 @@ case "$MODE" in
 			AU_LC=`echo $AUTO_UPGRADE | sed 's/.*/\L&/'`
 			if [[ "$AU_LC" == "true" || "$AU_LC" == "false" ]]; then
 				AUTO_UPGRADE=$AU_LC				
-				echo "Auto Upgrade: $AUTO_UPGRADE"
+				echo "Auto Upgrade was set to $AUTO_UPGRADE"
 			else
 				echo "$AUTO_UPGRADE is invalid value for autoUpgrade. Valid values are true and false"
 				exit 1
 			fi
-			##GET HALLMARK HERE
-			if [[ $HALLMARK = *[!\ ]* ]]; then
+			#GET HALLMARK HERE
+			if [[ $HALLMARK == *[!\ ]* ]]; then
 				#already set
-				echo "$HALLMARK"
+				hallmarkSet="true"
+				echo "hallmark was set"
 			else
-				CURRENT_DATE=$(date +'%Y-%m-%d') &&
-				HALLMARK_URL="https://heatwallet.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
-				echo "hallmark url: $HALLMARK_URL"
-				HALLMARK_RESPONSE=`curl -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
-				echo "hallmark response: $HALLMARK_RESPONSE"
-				HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
-				echo "HALLMARK: $HALLMARK"
+				echo "hallmark was not set, it will be obtained automatically later."
+				hallmarkSet="false"
 			fi
 	
 			#update repos and packages and install dependencies
@@ -366,7 +362,7 @@ case "$MODE" in
 			sudo apt-get install -y curl &&
 			sudo apt-get install -y jq && #to parse JSON
 			sudo apt-get install -y bc && #for math
-			sudo apt-get install -y dbus #needed for some installs, not sure why its missing in those variations, need to investigate further, I believe the script may be starting before dbus was all the way up
+			sudo apt-get install -y dbus #needed for some installs, not sure why its missing in those variations, need to investigate further, I believe the script may be starting before dbus was all the way up			
 			#sudo apt-get install -y dialog #for UI, may move this
 			#sudo apt-get install -y #some version of curses maybe for UI?
 			
@@ -408,7 +404,7 @@ case "$MODE" in
 						*.bz2)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tjvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xjvf $FILE
 							else
@@ -424,7 +420,7 @@ case "$MODE" in
 						*.gz)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tzvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xzvf $FILE
 							else
@@ -438,7 +434,7 @@ case "$MODE" in
 						*.tar)
 							wget $SNAPSHOT_URL
 							BC_FOLDER=`tar -tvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
 								rm $DEST
 								tar -xvf $FILE
 							else
@@ -483,7 +479,6 @@ case "$MODE" in
 				heat.myAddress=$IP_ADDRESS
 				heat.myPlatform=$HEAT_ID
 				heat.maxNumberOfConnectedPublicPeers=$MAX_PEERS
-				heat.myHallmark=$HALLMARK
 				heat.forceScan=$FORCE_SCAN
 				heat.forceValidate=$FORCE_VALIDATE
 			" > $CONF
@@ -495,7 +490,6 @@ case "$MODE" in
 			echo "$(date)" > "$SHARED/dat/install_time"
 			echo "$IP_ADDRESS" > "$SHARED/dat/ipAddress"
 			echo "$MAX_PEERS" > "$SHARED/dat/maxPeers"
-			echo "$HALLMARK" > "$SHARED/dat/hallmark"
 			echo "$FORCE_SCAN" > "$SHARED/dat/forceScan"
 			echo "$FORCE_VALIDATE" > "$SHARED/dat/forceValidate"
 			echo "$USE_SNAPSHOT" > "$SHARED/dat/useSnapshot"
@@ -512,8 +506,8 @@ case "$MODE" in
 			fb_wd="WorkingDirectory=$FIRE_HOME/fire_builder"
 			fb_st="ExecStart=$FIRE_HOME/fire_builder/fire_builder"
 			svc_user="User=$HEAT_USER"
-			#fb_sp=
-			#fb_rs=
+			#fb_sp= #included for future use
+			#fb_rs= #included for future use
 			sed -i "/WorkingDirectory/c $fw_wd" "$FIRE_HOME/fire_watch/fire_watch.service"
 			sed -i "/ExecStart/c $fw_st" "$FIRE_HOME/fire_watch/fire_watch.service"
 			sed -i "/ExecStop/c $fw_sp" "$FIRE_HOME/fire_watch/fire_watch.service"
@@ -522,11 +516,11 @@ case "$MODE" in
 	
 			sed -i "/WorkingDirectory/c $fb_wd" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sed -i "/ExecStart/c $fb_st" "$FIRE_HOME/fire_builder/fire_builder.service"
-			#sed -i "/WorkingDirectory/c $fb_sp" "$FIRE_HOME/fire_builder/fire_builder.service"
-			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service"
+			#sed -i "/WorkingDirectory/c $fb_sp" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
+			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
 			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_builder/fire_builder.service"
 	
-			sudo cp  "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
+			sudo cp "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
 			sudo cp "$FIRE_HOME/fire_watch/fire_watch.service" "/etc/systemd/system/fire_watch.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_builder" "$FIRE_HOME/fire_builder/fire_builder.service"
 			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_watch" "$FIRE_HOME/fire_watch/fire_watch.service"
@@ -534,11 +528,58 @@ case "$MODE" in
 			sudo systemctl enable fire_builder
 			sudo systemctl enable fire_watch
 			sudo systemctl daemon-reload
+			
+			if [[ $hallmarkSet == "true" ]]; then
+				echo "heat.myHallmark=$HALLMARK" >> $CONF # be sure to append here and not overwrite
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"			
+			fi	
+						
 			echo "starting fire_builder"
 			sudo systemctl start fire_builder &&
 			echo "starting fire_watch"
 			sudo systemctl start fire_watch
+			
+			if [[ $hallmarkSet == "false" ]]; then
+				done="false"
+				tries=0;
+				maxTries=10;
+				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
+				while [[  "$done" == "false"  ]]; do
+					tries=$(( $tries + 1 ))
+					if [[ $tries -gt $maxTries ]]; then
+						echo "Error: Failed to obtain hallmark!!! Exiting"
+						exit 1
+					fi					
+					echo "attempting to obtain hallmark from local node...."
+					sleep 10s
+					HALLMARK=`getHallmark`
+					succeeded=$?
+					if [[ $succeeded ]]; then
+						if [[ "$HALLMARK" == *[!\ ]* ]]; then
+						 	done="true"
+						 	echo "Hallmark was set"
+						else
+							echo "unable to obtain hallmark"
+						fi
+					else
+						echo "unable to obtain hallmark"
+					fi
+				done
+				echo "heat.myHallmark=$HALLMARK" >> $CONF
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"
+				sudo /bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
+				sudo systemctl stop fire_watch.service
+				sudo systemctl start fire_watch.service 
+			fi
+			
 			echo "Fire installed!!!"
+			echo "Heat node should start automatically in 1 minute"
+			echo "After the node has had time to start, move to the fire folder:
+			example:
+			cd fire
+			then run the command:
+			./fire --info to view its status"
+			
 			;;
 			
 		upgrade)
@@ -619,7 +660,7 @@ case "$MODE" in
 						*.bz2)
 							wget $snapUrl
 							BC_FOLDER=`tar -tjvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xjvf $FILE
 							else
@@ -635,7 +676,7 @@ case "$MODE" in
 						*.gz)
 							wget $snapUrl
 							BC_FOLDER=`tar -tzvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]];then #archive contains blockchain folder
 									rm $DEST
 									tar -xzvf $FILE
 							else
@@ -649,7 +690,7 @@ case "$MODE" in
 						*.tar)
 							wget $snapUrl
 							BC_FOLDER=`tar -tvf $FILE | grep "blockchain/"`
-							if [[ BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
+							if [[ $BC_FOLDER == *[!\ ]* ]]; then #archive contains blockchain folder
 								rm $DEST
 								tar -xvf $FILE
 							else

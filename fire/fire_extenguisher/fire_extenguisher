@@ -17,13 +17,12 @@ if [[ "$1" == "--uninstall" ]]; then
 	sudo umount fire_fs
 	#remove log file settings here, logs not yet implmeneted TODO
 	#sudo rm /etc/logrotate.d/fire
-	sudo rm -r $FIRE_HOME #don't enable this on development machine!!!
+	sudo rm -r $FIRE_HOME
 	echo "fire was successfully uninstalled!"
 else
 	PIDFILE="$FS/pid/fire.pid"
 	PID=`cat $PIDFILE`
 	EXISTS=`/bin/bash $UTILS/doesFireExist`
-	echo $EXISTS
 	if [[ $EXISTS = "true" ]]; then
 		echo "extinguishing fire...."
 		sudo kill -9 "$PID"

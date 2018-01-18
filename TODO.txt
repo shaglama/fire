@@ -1,0 +1,20 @@
+finish conversion of variable names to camelCase so as not to accidently clobber any existing shell variables. Tidy up formatting. Add comments in any places that arent clear.
+
+implment checks for more of the dependencies before trying to install via apt. currently only java is explicity checked and its left up to apt to handle the rest. Not optimal.
+
+Use dig or host commands to obtain public ip, current check with curl to dyndns is sometimes slow to respond. Also, to handle dynamic ips, a check could be implemented at each start to see if ip has changed since last run. if so, the hallmark will need to be regenerated and that and the new ip will need to be written to conf before starting node.
+
+move hallmark generation to local node, although the request to heatwallet is https it still makes more sense security wise to obtain it locally. 
+
+encrypt private settings using openssl or gpg. probably gpg. provide a decryption routine that can only be used by the user the script was installecd with to make it harder for someone with root or sudo priveleges to snoop
+
+Build text-mode "graphical" user interface with whiptail or dialog. Whiptail is already present in most situations and is currently used by the gui installer. However, it lacks many of the features found in dialog such as programbox and tailbox which could be very useful
+
+Provide option to enable a web ui for viewing fire and node status from a browser. Current plan is to use node as the server with express handling the routing and jade for some simple templates. Sample page developed that shows output of the fire --info command in a pre tag. currently found in the web folder. note, dependencies for this like node will need to be installed manually to test this  as it is 0% integrated in the installer at the moment. Will likely include this in a different download than the fire core so it is not downloaded if the option is not enabled. 
+
+in fire info report, need to indicate that node could not be reached yet instead of displaying blank lines. This usually only occurs during startup of node before node is able to handle the request. Probably also need to indicated if the node used to check the current chain height can't be reached. 
+
+
+
+
+
