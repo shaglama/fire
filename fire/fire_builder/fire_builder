@@ -66,7 +66,7 @@ echo "$HALLMARK"
 return 0
 }
 function ensureScreensAreDead(){
-	if [[ `screen -ls | grep heatLedger ]]; then
+	if [[ `screen -ls | grep heatLedger` ]]; then
 		#screen wasn't killed
 		screen -ls | while read -r name stuff; do
 			screen -S "$name" -X quit
