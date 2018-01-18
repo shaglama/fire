@@ -1,0 +1,86 @@
+#!/bin/bash
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+FIRE_HOME=$(readlink -f "$(dirname $SCRIPT_DIR)")
+SHARED="$FIRE_HOME/fire_wood/shared"
+UTILS="$FIRE_HOME/fire_wood/utils"
+FIRE_BUILDER="$FIRE_HOME/fire_builder/fire_builder"
+FIRE_STARTER="$FIRE_HOME/fire_starter/fire_starter"
+FIRE_EXTENGUISHER="$FIRE_HOME/fire_extenguisher/fire_extenguisher"
+LOG="$SHARED/logs/fire_watch.log"
+PIDFILE="$$FIRE_HOME/fire_wood/fire_fs/pid/fire.pid"
+RUNNING="true"
+INTERVAL="1m"
+
+function start(){
+	#rm "$PIDFILE"
+	#touch "$PIDFILE"
+	echo "logging to  $LOG"
+	lastUpgradeCheck=0
+	upgradeInterval=$(( 60 * 60 * 1 ))
+	while [[ $RUNNING = "true"  ]]; do
+  			 #check for upgrades
+  			 autoUpgrade=`cat "$SHARED/dat/autoUpgrade"`
+  			 if [[ $autoUpgrade == "true" ]]; then
+  			 	currentTime=`date +"%s"`
+  			 	timeSinceLastCheck=$(($currentTime - $lastUpgradeCheck))
+  			 	if [[ $timeSinceLastCheck -ge $upgradeInterval ]];then
+  			 		/bin/bash "$FIRE_BUILDER" --mode=upgrade
+  			 		lastUpgradeCheck=$currentTime
+  			 	fi
+  			 fi
+  			 
+  			 #ensure node is up, if not start it
+          STARTED=$(/bin/bash $UTILS/doesFireExist)
+          echo "started: $STARTED"
+          DATE=`date`
+          if [[ $STARTED = "true"  ]]; then
+                  echo "fire_watch status: $DATE: Fire is running" | tee -a $LOG
+                  isForging=`/bin/bash $FIRE_HOME/fire_forge/fire_forge --isForging`
+                  if [[ isForging == "true" ]]; then
+                  	echo "fire_watch status:$DATE: Node is forging"
+                  else
+                  	/bin/bash $FIRE_HOME/fire_forge/fire_forge --startForging
+                  fi
+          else
+                  echo "fire_watch status: $DATE: Fire is not running" | tee -a $LOG
+                  /bin/bash $FIRE_STARTER
+
+          fi
+                
+                
+        	sleep $INTERVAL
+	done
+
+}
+function stop(){
+	/bin/bash "$FIRE_EXTENGUISHER"
+	echo "fire_watch status: fire stopped"
+}
+function restart(){
+	echo "fire_watch status: stopping fire"
+	/bin/bash "$SCRIPT" "stop" &&
+	echo "fire_watch status: fire stopped"
+	echo "fire_watch status: starting fire"
+	/bin/bash "$SCRIPT" "start"
+	echo "fire_watch status: fire restarted"
+}
+
+
+
+arg="$1"
+case "$arg" in
+	"stop")		
+		stop
+		;;
+	"start")
+		start
+		;;
+	"restart")
+		restart
+		;;
+	*)
+		echo "fire_watch: error: no command specified"
+		;;
+
+esac

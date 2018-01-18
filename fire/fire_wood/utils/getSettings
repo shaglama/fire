@@ -1,0 +1,10 @@
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+FIRE_HOME=$(readlink -f "$(dirname "$SCRIPT_DIR")")
+SHARED="$FIRE_HOME/shared"
+UTILS="$FIRE_HOME/utils"
+
+echo $UTILS
+
+#implement functions to retrieve settings here
+#eventually should be able to decrypt the settings files after encryption is implemented

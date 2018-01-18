@@ -1,0 +1,35 @@
+#!/bin/bash
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+FIRE_HOME=$(readlink -f "$(dirname $SCRIPT_DIR)")
+SHARED="$FIRE_HOME/fire_wood/shared"
+UTILS="$FIRE_HOME/fire_wood/utils"
+HEAT_DIR="$FIRE_HOME/fire_wood/heat"
+VER_DIR=$(ls $HEAT_DIR | grep "heatledger-*")
+FS="$FIRE_HOME/fire_wood/fire_fs"
+PIDFILE="$FS/pid/fire.pid"
+START_TIME="$FS/heat_start_time"
+
+function start(){
+	F_PID=""
+	echo "fire_starter: Starting fire"
+        cd "$HEAT_DIR/$VER_DIR/bin"
+        screen -dmS 'heatLedger' /bin/bash heatledger
+        F_PID=`screen -list | grep "heatLedger" | cut -f1 -d'.' | sed 's/\W//g'`
+        if [[ "$F_PID" == *[!\ ]* ]]; then #pid was obtained
+            	echo $F_PID > $PIDFILE
+            	echo `date +%s` > $START_TIME
+					echo "fire_starter: Fire is lit!"
+					exit 0
+        else
+               echo "fire_starter: ERROR!!! unable to start"
+               exit 1
+        fi
+}
+
+EXISTS=`/bin/bash "$UTILS/doesFireExist"`
+if [[ $EXISTS == "true" ]]; then
+	echo "fire_starter: Node is already running"
+else
+	start
+fi

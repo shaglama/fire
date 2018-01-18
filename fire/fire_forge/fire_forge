@@ -1,0 +1,96 @@
+#!/bin/bash
+script=`readlink -f $0`
+script_dir=`dirname $(readlink -f $0)`
+fire_home=$(readlink -f "$(dirname $script_dir)")
+fire_wood="$fire_home/fire_wood"
+utils="$fire_wood/utils"
+shared="$fire_wood/shared/"
+fs="$fire_wood/fire_fs"
+
+
+mode="not_set"
+encoded=`cat "$shared/dat/private/urlCompliant.txt"`
+apiKey=`cat "$shared/dat/private/key.txt"`
+
+function startForging(){
+	local forging=`isForging`
+	if [[ $forging == "false" ]]; then	
+		#check chain sync status
+		local synced=`/bin/bash $fire_home/fire_report/fire_report --isSynced`
+		if [[ $synced == "true" ]]; then
+			echo "fire_forge status: staring forging....."
+			echo `curl -k -s http://localhost:7733/api/v1/mining/start/$encoded\?api_key=$apiKey` 
+		else
+			echo "fire_forge status: unable to start forging. node is not synced yet."
+		fi
+	else
+		echo "fire_forege status: node is forging"
+	fi	
+}
+
+
+function isForging(){
+	status=`forgingStatus`
+	if [[ `echo $status | grep "deadline"` ]]; then
+		echo "true"
+	else
+		echo "false"
+	fi
+}
+
+function forgingStatus(){
+	echo `curl -k -s http://localhost:7733/api/v1/mining/info/$encoded\?api_key=$apiKey`
+}
+
+#get arguments
+# as long as there is at least one more argument, keep looping
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+         -S|--startForging)
+				if [[ "$mode" == "not_set" ]]; then
+					mode="startForging"
+				else
+					echo "cannot set mode to start.mode is already set"
+				fi		
+				;;
+			-i|--isForging)
+				if [[ "$mode" == "not_set" ]]; then
+					mode="isForging"
+				else
+					echo "cannot set mode to isforging. mode is already set"
+				fi
+				;;
+			-s|--status)
+				if [[ "$mode" == "not_set" ]]; then
+					mode="status"
+				else
+					echo "cannot set mode to status. mode is already set"
+				fi
+				;;
+	 		*)
+        		# do whatever you want with extra options
+        		echo "unknown option '$key'"
+        		;;
+    esac
+    # shift after checking all the cases to get the next option
+    shift
+done
+if [[ $mode == "not_set" ]]; then
+	mode="status"
+fi
+case "$mode" in
+	"startForging")
+		startForging
+		;;
+	"isForging")
+		isForging
+		;;
+		
+	"status")
+		forgingStatus
+		;;
+
+	*)
+		echo "invalid mode: $mode"
+esac

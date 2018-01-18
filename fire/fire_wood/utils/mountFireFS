@@ -1,0 +1,20 @@
+#!/bin/bash
+SCRIPT=`readlink -f $0`
+SCRIPT_DIR=`dirname $(readlink -f $0)`
+PARENT=`dirname $SCRIPT_DIR`
+FIRE_HOME=$(readlink -f "$(dirname $PARENT)")
+UTILS="$FIRE_HOME/fire_wood/utils"
+MOUNT_POINT="$FIRE_HOME/fire_wood/fire_fs"
+FIRE_USER=$(cat "$FIRE_HOME/fire_wood/shared/dat/user/heat.user")
+echo $FIRE_USER
+FUID=`id -u $FIRE_USER`
+echo $FUID
+FIRE_FS_MOUNTED=`mount -v | grep fire_fs`
+if [[ "$FIRE_FS_MOUNTED" == *[!\ ]*  ]];then  #file system already mounted
+	echo "fire_fs already exists. Unmounting previous version"
+	sudo umount "fire_fs"
+	
+fi
+sudo mount -t tmpfs -o size=5M,mode=700,uid=$FUID fire_fs $MOUNT_POINT
+sudo chown -R  $FIRE_USER $MOUNT_POINT
+echo "fire_fs mounted"
