@@ -55,7 +55,7 @@ function getLatestReleaseInfo(){
 }
 function getHallmark(){
 CURRENT_DATE=$(date +'%Y-%m-%d') &&
-HALLMARK_URL="https://localhost.com:7734/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
+HALLMARK_URL="http://localhost:7733/api/v1/tools/hallmark/encode/$IP_ADDRESS/200/$CURRENT_DATE/$ENCODED"
 HALLMARK_RESPONSE=`curl --max-time 30 -X GET --header 'Accept: application/json' $HALLMARK_URL` &&
 HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
 echo "$HALLMARK"
