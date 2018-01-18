@@ -67,10 +67,11 @@ return 0
 }
 function ensureScreensAreDead(){
 	if [[ `screen -ls | grep heatLedger ]]; then
-						#screen wasn't killed
-						screen -ls | while read -r name stuff; do
-	      				screen -S "$name" -X quit
-	 					done
+		#screen wasn't killed
+		screen -ls | while read -r name stuff; do
+			screen -S "$name" -X quit
+ 		done
+ 		screen -wipe
 	fi
 }
 #program######################################################################
