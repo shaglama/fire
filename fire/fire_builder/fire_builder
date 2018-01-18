@@ -65,6 +65,14 @@ HALLMARK=`echo "$HALLMARK_RESPONSE" | cut -c14- | rev | cut -c3- | rev` &&
 echo "$HALLMARK"
 return 0
 }
+function ensureScreensAreDead(){
+	if [[ `screen -ls | grep heatLedger ]]; then
+						#screen wasn't killed
+						screen -ls | while read -r name stuff; do
+	      				screen -S "$name" -X quit
+	 					done
+	fi
+}
 #program######################################################################
 #get arguments
 # As long as there is at least one more argument, keep looping
@@ -569,6 +577,7 @@ case "$MODE" in
 				echo "$HALLMARK" > "$SHARED/dat/hallmark"
 				sudo /bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
 				sudo systemctl stop fire_watch.service
+				ensureScreensAreDead
 				sudo systemctl start fire_watch.service 
 			fi
 			
@@ -604,7 +613,9 @@ case "$MODE" in
 			if [[ ! $currentVersion == $newestVersion ]]; then
 				echo "Upgrading from $currentVersion to $newestVersion"
 				#stop node
-				/bin/bash "FIRE_HOME/fire_extenguisher/fire_extenguisher"				
+				/bin/bash "FIRE_HOME/fire_extenguisher/fire_extenguisher"
+				sudo systemctl stop fire_watch.service
+				ensureScreensAreDead				
 				#save blockchain folder 
 				mv "$BIN_DIR/blockchain" "/tmp/fire_blockchain"
 				#save conf
@@ -645,7 +656,8 @@ case "$MODE" in
 			VER_DIR="$BASE_DIR/$currentRelease"
 			BIN_DIR="$VER_DIR/bin"
 			/bin/bash "$FIRE_HOME/fire_extenguisher/fire_extenguisher"
-			sudo systemctl stop fire_watch.service			
+			sudo systemctl stop fire_watch.service
+			ensureScreensAreDead			
 			cd $BIN_DIR
 			echo $BIN_DIR
 			rm -r blockchain
