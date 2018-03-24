@@ -1,5 +1,5 @@
-# fire 0.0.3.40
-January 18, 2018
+# fire 0.0.3.41
+March 24, 2018
 Randy Hoggard
 shaglama@gmail.com
 
@@ -9,6 +9,10 @@ Heat Ledger server installer and monitor for Ubuntu
 Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 or newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. However, it now performs its core tasks well. It currently will download the newest version of Heat Ledger, install  it, set up a service to monitor it, and initiate forging after the node has synced. It automatically enables the node to come up after reboots as well. It also provides basic information about the state of the node.
 
 #####     Whats new     ######################################################
+** Fixed typo that prevented stop and restart functions from running
+
+** Added testing folders to the github repository that include scripts being worked on for future releases
+
 ** Fixed problem with screens not being killed when service stops
 
 ** Hallmark generation moved to local node for added security
