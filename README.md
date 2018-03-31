@@ -1,5 +1,5 @@
-# fire 0.0.3.41
-March 24, 2018
+# fire 0.0.3.42
+March 31, 2018
 Randy Hoggard
 shaglama@gmail.com
 
@@ -9,6 +9,10 @@ Heat Ledger server installer and monitor for Ubuntu
 Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for Ubuntu 16.04 or newer versions. It will probably not work on older versions as it relies on systemd. It is still in very early alpha and a lot of functionality is still missing. However, it now performs its core tasks well. It currently will download the newest version of Heat Ledger, install  it, set up a service to monitor it, and initiate forging after the node has synced. It automatically enables the node to come up after reboots as well. It also provides basic information about the state of the node.
 
 #####     Whats new     ######################################################
+** Fixed typo in fire_watch where pid file was specified
+
+** Added script to clean fire_watch log to keep its size from growing out of control
+
 ** Fixed typo that prevented stop and restart functions from running
 
 ** Added testing folders to the github repository that include scripts being worked on for future releases
@@ -39,29 +43,29 @@ Fire is an installer, monitor, and manager for Heat Ledger nodes.It is built for
 Download the GUI install script:
 
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.40_gui.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.42_gui.sh
 
 
 ### Step 2
 Set the execute permission:
 
-chmod +x install_fire_0.0.3.40_gui.sh
+chmod +x install_fire_0.0.3.42_gui.sh
 
 ### Step 3
 Run the installer
 
-./install_fire_0.0.3.40_gui.sh
+./install_fire_0.0.3.42_gui.sh
 
 ##     Installation With Cli Script     ######################################
 ### Step 1
 Download the install script:
 
-wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.40.sh
+wget https://raw.githubusercontent.com/shaglama/fire/development/install_fire_0.0.3.42.sh
 
 ### Step 2
 Set the execute permissions:
 
-chmod +x install_fire_0.0.3.40.sh
+chmod +x install_fire_0.0.3.42.sh
 
 ### Step 3
 Choose whether you would like set the options by editing the script or set the options by passing arguments to the command
@@ -70,7 +74,7 @@ If you choose to edit the script, proceed to step 3a. If you would rather pass t
 #### Step 3a
 Edit the installer script and change the options to your liking (Available options described later in this document):
 
-nano install_fire_0.0.3.40.sh
+nano install_fire_0.0.3.42.sh
 After editing, hold control and press 'o' to save.Then hold control and press 'x' to close
 
 ### Step 4
@@ -79,12 +83,12 @@ If you set the options by editing the script in step 3, proceed to step 4a. If y
 #### Step 4a
 Run the installer script
 
-./install_fire_0.0.3.40.sh
+./install_fire_0.0.3.42.sh
 
 #### Step 4b
 Pass the options as argument to the installer and run installer script
 
-./install_fire_0.0.3.40.sh --options="opition1Name=option1Val;option2Name=option2Val"
+./install_fire_0.0.3.42.sh --options="opition1Name=option1Val;option2Name=option2Val"
 
 Note:  see 'options' option below
 

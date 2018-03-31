@@ -1,0 +1,19 @@
+#!/bin/bash
+function cleanLog(){
+	maxLines=$1
+	minLines=$2
+	file=$3
+	numLines=$(cat "$file" | wc -l)
+	numToTrim=0;
+	if [ $numLines -gt $maxLines ]; then
+	numToTrim=$(( numLines - minLines ))
+	start="1"
+	seperator=","
+	stop="$numToTrim"
+	com="d"
+	comString="$start$seperator$stop$com"
+	sed -i "$comString" "$file"
+	fi
+}
+cleanLog $@
+

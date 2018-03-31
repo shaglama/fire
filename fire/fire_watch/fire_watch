@@ -8,7 +8,7 @@ FIRE_BUILDER="$FIRE_HOME/fire_builder/fire_builder"
 FIRE_STARTER="$FIRE_HOME/fire_starter/fire_starter"
 FIRE_EXTENGUISHER="$FIRE_HOME/fire_extenguisher/fire_extenguisher"
 LOG="$SHARED/logs/fire_watch.log"
-PIDFILE="$$FIRE_HOME/fire_wood/fire_fs/pid/fire.pid"
+PIDFILE="$FIRE_HOME/fire_wood/fire_fs/pid/fire.pid"
 RUNNING="true"
 INTERVAL="1m"
 
@@ -45,8 +45,9 @@ function start(){
                   /bin/bash $FIRE_STARTER
 
           fi
-                
-                
+          
+          #clear logs if needed      
+          /bin/bash $UTILS/cleanLog 3000 1500 $LOG      
         	sleep $INTERVAL
 	done
 
