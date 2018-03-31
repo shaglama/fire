@@ -1,5 +1,5 @@
 #!/bin/bash
-#v0.0.3.42
+#v0.0.3.45
 SCRIPT=`readlink -f $0`
 SCRIPT_DIR=`dirname $(readlink -f $0)`
 FIRE_HOME=$(readlink -f "$SCRIPT_DIR")
