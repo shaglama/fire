@@ -596,7 +596,7 @@ case "$MODE" in
 			sudo systemctl start fire_watch.service 
 			echo "Fire installed!!!"
 			echo "Heat node should start automatically in 1 minute"
-			echo "After the node has had time to start, move to the fire folder:
+			echo "After the node has had time to start and can handle requests (this can take quite a while, especially if loading from snapshot), move to the fire folder:
 			example:
 			cd fire
 			then run the command:
