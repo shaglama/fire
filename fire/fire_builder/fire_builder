@@ -516,6 +516,7 @@ case "$MODE" in
 					cd $BIN_DIR
 					FILE=${SNAPSHOT_URL##*/}
 					DEST="blockchain"
+					rm -r "blockchain"
 					case "$FILE" in
 	
 						*.tar.bz2)  ;& #fallthrough

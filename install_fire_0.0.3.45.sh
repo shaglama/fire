@@ -1,6 +1,6 @@
 #!/bin/bash
 #fire install scrip
-#version 0.0.3.44
+#version 0.0.3.45
 #March 31, 2018
 #Randy Hoggard
 
@@ -147,7 +147,7 @@ function split() {
 #%%%%%%%% Install fire %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 script=`readlink -f $0`
 scriptDir=`dirname $(readlink -f $0)`
-version="0.0.3.44"
+version="0.0.3.45"
 file="fire_$version.tar.gz"
 ##get any arguments for installer
 while [[ $# -gt 0 ]]; do
