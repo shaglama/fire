@@ -65,6 +65,8 @@ Run the installer
 
 ./install_fire_0.0.3.45_gui.sh
 
+After the install has finished, it may take a while before the node will respond to commands, especially if loading blocks from a snapshot. The --info command will not show any results until the node reaches a state where it can handle requests. This is normal. 
+
 ##     Installation With Cli Script     ######################################
 ### Step 1
 Download the install script:
