@@ -556,10 +556,11 @@ case "$MODE" in
 					tries=$(( $tries + 1 ))
 					if [[ $tries -gt $maxTries ]]; then
 						echo "Error: Failed to obtain hallmark!!! Exiting"
+						/bin/bash "$FIRE_HOME/fire" "--uninstall"
 						exit 1
 					fi					
 					echo "attempting to obtain hallmark from local node...."
-					sleep 10s
+					sleep 30s
 					HALLMARK=`getHallmark`
 					succeeded=$?
 					if [[ $succeeded ]]; then

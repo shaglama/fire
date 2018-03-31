@@ -15,12 +15,18 @@ INTERVAL="1m"
 function start(){
 	echo "logging to  $LOG"
 	lastUpgradeCheck=0
+	lastLogClear=0
 	upgradeInterval=$(( 60 * 60 * 1 ))
+	clearLogInterval=$((60 * 60 * 6 ))
+	timeSinceLastCheck=0	
+	timeSinceLastClear=0
+	autoUpgrade=""
+
 	while [[ $RUNNING = "true"  ]]; do
+			currentTime=`date +"%s"`
   			 #check for upgrades
   			 autoUpgrade=`cat "$SHARED/dat/autoUpgrade"`
-  			 if [[ $autoUpgrade == "true" ]]; then
-  			 	currentTime=`date +"%s"`
+  			 if [[ $autoUpgrade == "true" ]]; then  			 	
   			 	timeSinceLastCheck=$(($currentTime - $lastUpgradeCheck))
   			 	if [[ $timeSinceLastCheck -ge $upgradeInterval ]];then
   			 		/bin/bash "$FIRE_BUILDER" --mode=upgrade
@@ -46,8 +52,14 @@ function start(){
 
           fi
           
-          #clear logs if needed      
-          /bin/bash $UTILS/cleanLog 3000 1500 $LOG      
+          #clean logs
+          timeSinceLastClear=$(($currentTime - $lastLogClear))
+          if [[ $timeSinceLastClear -ge $clearLogInterval ]];then      
+          	/bin/bash $UTILS/cleanLog 3000 1500 $LOG
+          	lastLogClear=$currentTime
+          fi
+          
+          #wait till time for next run through loop      
         	sleep $INTERVAL
 	done
 
