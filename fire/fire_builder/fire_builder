@@ -398,7 +398,117 @@ case "$MODE" in
 			7z x $RELEASE_FILE &&
 			rm $RELEASE_FILE &&
 			cd "$VER_DIR"
+			
+			#create config file
+			echo "\
+				heat.apiKey=$API_KEY
+				heat.myAddress=$IP_ADDRESS
+				heat.myPlatform=$HEAT_ID
+				heat.maxNumberOfConnectedPublicPeers=$MAX_PEERS
+				heat.forceScan=$FORCE_SCAN
+				heat.forceValidate=$FORCE_VALIDATE
+			" > $CONF
 	
+			#save install vars
+			echo "$AUTO_UPGRADE" > "$SHARED/dat/autoUpgrade"
+			echo "$HEAT_USER" > "$SHARED/dat/user/heat.user"
+			echo "$RELEASE_NUM" > "$SHARED/dat/heat_version"
+			echo "$(date)" > "$SHARED/dat/install_time"
+			echo "$IP_ADDRESS" > "$SHARED/dat/ipAddress"
+			echo "$MAX_PEERS" > "$SHARED/dat/maxPeers"
+			echo "$FORCE_SCAN" > "$SHARED/dat/forceScan"
+			echo "$FORCE_VALIDATE" > "$SHARED/dat/forceValidate"
+			echo "$USE_SNAPSHOT" > "$SHARED/dat/useSnapshot"
+			echo "$SNAPSHOT_URL" > "$SHARED/dat/snapshotUrl"
+			echo "$PASSWORD" > "$SHARED/dat/private/userPassword.txt"
+			echo "$ENCODED" > "$SHARED/dat/private/urlCompliant.txt"
+			echo "$API_KEY" > "$SHARED/dat/private/key.txt"
+			echo "$HEAT_ID" > "$SHARED/dat/private/id.txt"
+			
+			fw_wd="WorkingDirectory=$FIRE_HOME/fire_watch"
+			fw_st="ExecStart=$FIRE_HOME/fire_watch/fire_watch start"
+			fw_sp="ExecStop=$FIRE_HOME/fire_watch/fire_watch stop"
+			fw_rs="ExecRestart=$FIRE_HOME/fire_watch/fire_watch restart"
+			fb_wd="WorkingDirectory=$FIRE_HOME/fire_builder"
+			fb_st="ExecStart=$FIRE_HOME/fire_builder/fire_builder"
+			svc_user="User=$HEAT_USER"
+			#fb_sp= #included for future use
+			#fb_rs= #included for future use
+			sed -i "/WorkingDirectory/c $fw_wd" "$FIRE_HOME/fire_watch/fire_watch.service"
+			sed -i "/ExecStart/c $fw_st" "$FIRE_HOME/fire_watch/fire_watch.service"
+			sed -i "/ExecStop/c $fw_sp" "$FIRE_HOME/fire_watch/fire_watch.service"
+			sed -i "/ExecRestart/c $fw_rs" "$FIRE_HOME/fire_watch/fire_watch.service"
+			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_watch/fire_watch.service"
+	
+			sed -i "/WorkingDirectory/c $fb_wd" "$FIRE_HOME/fire_builder/fire_builder.service"
+			sed -i "/ExecStart/c $fb_st" "$FIRE_HOME/fire_builder/fire_builder.service"
+			#sed -i "/WorkingDirectory/c $fb_sp" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
+			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
+			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_builder/fire_builder.service"
+	
+			sudo cp "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
+			sudo cp "$FIRE_HOME/fire_watch/fire_watch.service" "/etc/systemd/system/fire_watch.service"
+			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_builder" "$FIRE_HOME/fire_builder/fire_builder.service"
+			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_watch" "$FIRE_HOME/fire_watch/fire_watch.service"
+			sudo chmod -R 700 $FIRE_HOME		
+			sudo systemctl enable fire_builder
+			sudo systemctl enable fire_watch
+			sudo systemctl daemon-reload
+			
+			if [[ $hallmarkSet == "true" ]]; then
+				echo "heat.myHallmark=$HALLMARK" >> $CONF # be sure to append here and not overwrite
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"			
+			fi	
+						
+			#echo "starting fire_builder"
+			#sudo systemctl start fire_builder &&
+			#echo "starting fire_watch"
+			#sudo systemctl start fire_watch
+			
+			if [[ $hallmarkSet == "false" ]]; then			
+				
+				echo "starting fire_builder"
+				sudo systemctl start fire_builder &&
+				echo "starting fire_watch"
+				sudo systemctl start fire_watch		
+			
+				done="false"
+				tries=0;
+				maxTries=10;
+				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
+				while [[  "$done" == "false"  ]]; do
+					tries=$(( $tries + 1 ))
+					if [[ $tries -gt $maxTries ]]; then
+						echo "Error: Failed to obtain hallmark!!! Exiting"
+						/bin/bash "$FIRE_HOME/fire" "--uninstall"
+						exit 1
+					fi					
+					echo "attempting to obtain hallmark from local node...."
+					sleep 30s
+					HALLMARK=`getHallmark`
+					succeeded=$?
+					if [[ $succeeded ]]; then
+						if [[ "$HALLMARK" == *[!\ ]* ]]; then
+						 	done="true"
+						 	echo "Hallmark was set"
+						else
+							echo "unable to obtain hallmark"
+						fi
+					else
+						echo "unable to obtain hallmark"
+					fi
+				done
+				echo "heat.myHallmark=$HALLMARK" >> $CONF
+				echo "$HALLMARK" > "$SHARED/dat/hallmark"
+				sudo /bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
+				sudo systemctl stop fire_watch.service
+				ensureScreensAreDead
+				#sudo systemctl start fire_watch.service 
+			fi
+			
+			
+			
+			
 			#download snapshot if neccessary
 			if [[ "$USE_SNAPSHOT" == "true" ]]; then
 				EXISTS=`/bin/bash "$FIRE_WOOD/utils/urlExists" "$SNAPSHOT_URL"`
@@ -480,108 +590,9 @@ case "$MODE" in
 				fi
 	
 			fi
-
-			#create config file
-			echo "\
-				heat.apiKey=$API_KEY
-				heat.myAddress=$IP_ADDRESS
-				heat.myPlatform=$HEAT_ID
-				heat.maxNumberOfConnectedPublicPeers=$MAX_PEERS
-				heat.forceScan=$FORCE_SCAN
-				heat.forceValidate=$FORCE_VALIDATE
-			" > $CONF
-	
-			#save install vars
-			echo "$AUTO_UPGRADE" > "$SHARED/dat/autoUpgrade"
-			echo "$HEAT_USER" > "$SHARED/dat/user/heat.user"
-			echo "$RELEASE_NUM" > "$SHARED/dat/heat_version"
-			echo "$(date)" > "$SHARED/dat/install_time"
-			echo "$IP_ADDRESS" > "$SHARED/dat/ipAddress"
-			echo "$MAX_PEERS" > "$SHARED/dat/maxPeers"
-			echo "$FORCE_SCAN" > "$SHARED/dat/forceScan"
-			echo "$FORCE_VALIDATE" > "$SHARED/dat/forceValidate"
-			echo "$USE_SNAPSHOT" > "$SHARED/dat/useSnapshot"
-			echo "$SNAPSHOT_URL" > "$SHARED/dat/snapshotUrl"
-			echo "$PASSWORD" > "$SHARED/dat/private/userPassword.txt"
-			echo "$ENCODED" > "$SHARED/dat/private/urlCompliant.txt"
-			echo "$API_KEY" > "$SHARED/dat/private/key.txt"
-			echo "$HEAT_ID" > "$SHARED/dat/private/id.txt"
 			
-			fw_wd="WorkingDirectory=$FIRE_HOME/fire_watch"
-			fw_st="ExecStart=$FIRE_HOME/fire_watch/fire_watch start"
-			fw_sp="ExecStop=$FIRE_HOME/fire_watch/fire_watch stop"
-			fw_rs="ExecRestart=$FIRE_HOME/fire_watch/fire_watch restart"
-			fb_wd="WorkingDirectory=$FIRE_HOME/fire_builder"
-			fb_st="ExecStart=$FIRE_HOME/fire_builder/fire_builder"
-			svc_user="User=$HEAT_USER"
-			#fb_sp= #included for future use
-			#fb_rs= #included for future use
-			sed -i "/WorkingDirectory/c $fw_wd" "$FIRE_HOME/fire_watch/fire_watch.service"
-			sed -i "/ExecStart/c $fw_st" "$FIRE_HOME/fire_watch/fire_watch.service"
-			sed -i "/ExecStop/c $fw_sp" "$FIRE_HOME/fire_watch/fire_watch.service"
-			sed -i "/ExecRestart/c $fw_rs" "$FIRE_HOME/fire_watch/fire_watch.service"
-			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_watch/fire_watch.service"
-	
-			sed -i "/WorkingDirectory/c $fb_wd" "$FIRE_HOME/fire_builder/fire_builder.service"
-			sed -i "/ExecStart/c $fb_st" "$FIRE_HOME/fire_builder/fire_builder.service"
-			#sed -i "/WorkingDirectory/c $fb_sp" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
-			#sed -i "/WorkingDirectory/c $fb_rs" "$FIRE_HOME/fire_builder/fire_builder.service" #included for future use
-			sed -i "/User=changeMe/c $svc_user" "$FIRE_HOME/fire_builder/fire_builder.service"
-	
-			sudo cp "$FIRE_HOME/fire_builder/fire_builder.service" "/etc/systemd/system/fire_builder.service"
-			sudo cp "$FIRE_HOME/fire_watch/fire_watch.service" "/etc/systemd/system/fire_watch.service"
-			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_builder" "$FIRE_HOME/fire_builder/fire_builder.service"
-			sudo /bin/bash "$UTILS/replaceText" "CHANGE_ME" "$FIRE_HOME/fire_watch" "$FIRE_HOME/fire_watch/fire_watch.service"
-			sudo chmod -R 700 $FIRE_HOME		
-			sudo systemctl enable fire_builder
-			sudo systemctl enable fire_watch
-			sudo systemctl daemon-reload
-			
-			if [[ $hallmarkSet == "true" ]]; then
-				echo "heat.myHallmark=$HALLMARK" >> $CONF # be sure to append here and not overwrite
-				echo "$HALLMARK" > "$SHARED/dat/hallmark"			
-			fi	
-						
-			echo "starting fire_builder"
-			sudo systemctl start fire_builder &&
-			echo "starting fire_watch"
-			sudo systemctl start fire_watch
-			
-			if [[ $hallmarkSet == "false" ]]; then
-				done="false"
-				tries=0;
-				maxTries=10;
-				echo "Hallmark has not been set. Will attempt to obtain hallmark from local node. This may take some time as the node must be started and reach a state where it is able to fill requests before this command can complete."
-				while [[  "$done" == "false"  ]]; do
-					tries=$(( $tries + 1 ))
-					if [[ $tries -gt $maxTries ]]; then
-						echo "Error: Failed to obtain hallmark!!! Exiting"
-						/bin/bash "$FIRE_HOME/fire" "--uninstall"
-						exit 1
-					fi					
-					echo "attempting to obtain hallmark from local node...."
-					sleep 30s
-					HALLMARK=`getHallmark`
-					succeeded=$?
-					if [[ $succeeded ]]; then
-						if [[ "$HALLMARK" == *[!\ ]* ]]; then
-						 	done="true"
-						 	echo "Hallmark was set"
-						else
-							echo "unable to obtain hallmark"
-						fi
-					else
-						echo "unable to obtain hallmark"
-					fi
-				done
-				echo "heat.myHallmark=$HALLMARK" >> $CONF
-				echo "$HALLMARK" > "$SHARED/dat/hallmark"
-				sudo /bin/bash $FIRE_HOME/fire_extenguisher/fire_extenguisher
-				sudo systemctl stop fire_watch.service
-				ensureScreensAreDead
-				sudo systemctl start fire_watch.service 
-			fi
-			
+			#start fire
+			sudo systemctl start fire_watch.service 
 			echo "Fire installed!!!"
 			echo "Heat node should start automatically in 1 minute"
 			echo "After the node has had time to start, move to the fire folder:
